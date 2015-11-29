@@ -1,0 +1,35 @@
+<template name="itemTmpl">
+  <li class="list-group-item">
+    {{#with data}}
+      {{> Template.dynamic template=../display}}
+    {{/with}}
+    <div class="pull-right">
+      {{#if isNotState 'editing'}}<button id="edit" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></button>{{/if}}
+      {{#if isState 'editing'}}<div class="btn-group" role="group">
+        <button type="button" id="cancel" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+        <button type="button" id="save" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i></button>
+      </div>{{/if}}
+      {{#if isNotState 'deleting'}}<button id="delete" class="btn btn-primary"><i class="glyphicon glyphicon-trash"></i></button>{{/if}}
+      {{#if isState 'deleting'}}<div class="btn-group" role="group">
+        <button type="button" id="cancel" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+        <button type="button" id="remove" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+      </div>{{/if}}
+    </div>
+    {{#with data}}
+      {{#if isState 'editing'}}{{> Template.dynamic template=../editor}}{{/if}}
+    {{/with}}
+  </li>
+</template>
+
+<template name="newItemTmpl">
+  <li class="list-group-item">
+    {{#if isClose}}<button id="add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></button>&nbsp;<strong>Nouveau</strong>{{/if}}
+    {{#if isOpen}}<div class="btn-group" role="group">
+      <button type="button" id="cancel" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+      <button type="button" id="create" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i></button>
+    </div>{{/if}}
+    {{#if isOpen}}{{#with data}}
+      {{> Template.dynamic template=../editor}}
+    {{/with}}{{/if}}
+  </li>
+</template>

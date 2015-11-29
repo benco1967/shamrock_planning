@@ -1,0 +1,1 @@
+Instructors = new Mongo.Collection('instructors');
