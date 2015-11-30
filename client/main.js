@@ -4,6 +4,9 @@ currentPage = new ReactiveVar("home");
 Template.body.helpers({
   isCurrentPage: function(value) {
     return currentPage.get() === value;
+  },
+  currentPageTemplate: function() {
+    return currentPage.get() + "Page";
   }
 });
 
