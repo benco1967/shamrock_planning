@@ -6,6 +6,7 @@ Template.instructorDisplay.helpers({
   }
 });
 
+
 Template.instructorEditor.onRendered(function() {
     initCanvas(this.$("canvas"), 140, 140, this.data.image, "/img/upload.png");
   });
@@ -24,10 +25,11 @@ Template.instructorEditor.events({
 function newInstructor() {
   return {
     name: "",
+    gender: "female",
     creationDate: new Date()
   }
 }
-  
+
 Template.instructorsPage.helpers({
   instructors: function() {
     return Instructors.find({});
@@ -41,7 +43,11 @@ Template.instructorsPage.helpers({
       var image = getDataImage($form.find("canvas"), 128*1024);
       
       if(data !== undefined) {
-        var set = {name: $form.find("#name").val()};
+        var set = {
+          name: $form.find("#name").val(),
+          gender: getGender($form)
+        };
+        
         switch(image) {
         case false: 
           Instructors.update(data._id, {$set:set});
@@ -58,6 +64,7 @@ Template.instructorsPage.helpers({
       else {
         var instructor = newInstructor();
         instructor.name = $form.find("#name").val();
+        instructor.gender = getGender($form);
         if(image !== false) instructor.image = image;
         Instructors.insert(instructor);
       }
