@@ -1,6 +1,7 @@
 <head>
   <title>Shamrock planning</title>
   <link rel="shortcut icon" type="image/png" href="/img/favicon.png" sizes="16x16 32x32 64x64">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
@@ -30,9 +31,11 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-  {{#if (isCurrentPage 'home')}} {{> homePage}} {{/if}}
-  {{#if (isCurrentPage 'horses')}} {{> horsesPage}} {{/if}}
-  {{#if (isCurrentPage 'instructors')}} {{> instructorsPage}} {{/if}}
-  {{#if (isCurrentPage 'riders')}} {{> ridersPage}} {{/if}}
-  {{#if (isCurrentPage 'plannings')}} {{> planningsPage}} {{/if}}
+  <div class="container-fluid">
+    {{#if (isCurrentPage 'home')}} {{> homePage}} {{/if}}
+    {{#if (isCurrentPage 'horses')}} {{> horsesPage}} {{/if}}
+    {{#if (isCurrentPage 'instructors')}} {{> instructorsPage}} {{/if}}
+    {{#if (isCurrentPage 'riders')}} {{> ridersPage}} {{/if}}
+    {{#if (isCurrentPage 'plannings')}} {{> planningsPage}} {{/if}}
+  </div>
 </body>
