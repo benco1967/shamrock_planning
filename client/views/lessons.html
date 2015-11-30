@@ -1,0 +1,43 @@
+
+<template name="lessonDisplay">
+  <span>{{value day}} {{hour}} {{instructor.name}}</span>
+</template>
+
+<template name="lessonEditor">
+  <form id="lessonForm">
+    <div class="form-group">
+      <label for="name">Moniteur</label>
+      <select class="form-control" name="instructor" id="instructor">
+      {{#each instructors}}
+        <option value="{{_id}}" {{selectValue instructor_id _id}}>{{name}}</option>
+      {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="name">Jour</label>
+      <select class="form-control" name="day" id="day">
+        <option value="monday"    {{selectValue day "monday"}}>Lundi</option>
+        <option value="tuesday"   {{selectValue day "tuesday"}}>Mardi</option>
+        <option value="wednesday" {{selectValue day "wednesday"}}>Mercredi</option>
+        <option value="thursday"  {{selectValue day "thursday"}}>Jeudi</option>
+        <option value="friday"    {{selectValue day "friday"}}>Vendredi</option>
+        <option value="saturday"  {{selectValue day "saturday"}}>Samedi</option>
+        <option value="sunday"    {{selectValue day "sunday"}}>Dimanche</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="name">Heure</label>
+      <input type="text" class="form-control" id="hour" placeholder="Heure de reprise" value="{{hour}}">
+    </div>
+  </form>
+</template>
+
+<template name="lessonsPage">
+  <h2>Reprises</h2>
+  <ul class="list-group">
+    {{> newItemTmpl collection=lessonsCollection data=newLessonDefault resetForm=resetLessonForm saveItem=saveLesson editor="lessonEditor"}}
+    {{#each lessons}}
+      {{> itemTmpl collection=lessonsCollection data=this saveItem=saveLesson display="lessonDisplay" editor="lessonEditor"}}
+    {{/each}}
+  </ul>
+</template>

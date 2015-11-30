@@ -11,7 +11,7 @@ Template.body.helpers({
 });
 
 Template.body.events({
-  "click nav a": function (event) {
+  "click nav a.menu": function (event) {
     event.preventDefault();
     currentPage.set(event.target.id);
   }
