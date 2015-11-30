@@ -24,6 +24,7 @@
       <ul class="nav navbar-nav">
         <li class="{{#if (isCurrentPage 'horses')}}active{{/if}}"><a id="horses">Chevaux<span class="sr-only">(current)</span></a></li>
         <li class="{{#if (isCurrentPage 'instructors')}}active{{/if}}"><a id="instructors">Moniteurs</a></li>
+        <li class="{{#if (isCurrentPage 'riders')}}active{{/if}}"><a id="riders">Cavaliers</a></li>
         <li class="{{#if (isCurrentPage 'plannings')}}active{{/if}}"><a id="plannings">Plannings</a></li>  
       </ul>
     </div><!-- /.navbar-collapse -->
@@ -32,5 +33,6 @@
   {{#if (isCurrentPage 'home')}} {{> homePage}} {{/if}}
   {{#if (isCurrentPage 'horses')}} {{> horsesPage}} {{/if}}
   {{#if (isCurrentPage 'instructors')}} {{> instructorsPage}} {{/if}}
+  {{#if (isCurrentPage 'riders')}} {{> ridersPage}} {{/if}}
   {{#if (isCurrentPage 'plannings')}} {{> planningsPage}} {{/if}}
 </body>
