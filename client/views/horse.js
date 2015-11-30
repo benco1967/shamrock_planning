@@ -6,18 +6,9 @@ Template.horseDisplay.helpers({
   }
 });
 
-Template.horseEditor.onRendered(function() {
-    initCanvas(this.$("canvas"), 140, 140, this.data.image, "/img/upload.png");
-  });
 Template.horseEditor.events({
   "submit form": function (event) {
     event.preventDefault();
-  },
-  "click #uploadImg": function(event, template) { 
-    loadImage(template.$('#inputImage'), template.$("canvas")); 
-  },
-  "click #resetImg": function(event, template) { 
-    resetImage(template.$("canvas"), "/img/upload.png"); 
   }
 });
 
