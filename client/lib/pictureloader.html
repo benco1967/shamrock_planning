@@ -1,0 +1,12 @@
+
+<template name="pictureLoader">
+  <div style="height:{{options.height}}px;">
+    <canvas class="img-thumbnail" id="canvasImage" width="{{options.width}}" height="{{options.height}}" style="width:{{options.width}}px;height:{{options.height}}px;margin-bottom: -67px;"></canvas>
+    &nbsp;
+    <div class="btn-group" role="group">
+      <button type="button" id="resetImg" name="img" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+      <button type="button" id="uploadImg" name="img" class="btn btn-primary"><i class="glyphicon glyphicon-picture"></i>&nbsp;<i class="glyphicon glyphicon-plus"></i></button>
+    </div>
+    <input id="inputImage" type="file" name="inputImage" style="display:none;">
+  </div>
+</template>

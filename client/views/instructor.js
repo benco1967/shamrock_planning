@@ -7,18 +7,9 @@ Template.instructorDisplay.helpers({
 });
 
 
-Template.instructorEditor.onRendered(function() {
-    initCanvas(this.$("canvas"), 140, 140, this.data.image, "/img/upload.png");
-  });
 Template.instructorEditor.events({
   "submit form": function (event) {
     event.preventDefault();
-  },
-  "click #uploadImg": function(event, template) { 
-    loadImage(template.$('#inputImage'), template.$("canvas")); 
-  },
-  "click #resetImg": function(event, template) { 
-    resetImage(template.$("canvas"), "/img/upload.png"); 
   }
 });
 
