@@ -1,5 +1,5 @@
 <template name="itemTmpl">
-  <li class="list-group-item">
+  <li class="list-group-item {{#if isState 'editing'}}item-editing{{/if}}">
     {{#with data}}
       {{> Template.dynamic template=../display}}
     {{/with}}
@@ -22,7 +22,7 @@
 </template>
 
 <template name="newItemTmpl">
-  <li class="list-group-item">
+  <li class="list-group-item {{#if isOpen}}item-editing{{/if}}">
     {{#if isClose}}<button id="add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></button>&nbsp;<strong>Nouveau</strong>{{/if}}
     {{#if isOpen}}<div class="btn-group" role="group">
       <button type="button" id="cancel" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>

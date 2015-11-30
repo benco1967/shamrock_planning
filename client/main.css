@@ -14,3 +14,6 @@ body { padding-top: 70px; }
   background-repeat: repeat-x;
   border-radius: 2px;
 }
+.item-editing {
+  background-color: #eee;
+}
