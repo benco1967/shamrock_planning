@@ -2,15 +2,31 @@
 Template.instructorDisplay.helpers({
   getImage: function() {
     var instructor = Template.currentData();
-    return instructor.image !== undefined ? instructor.image : "/img/manHead.png";
+    return instructor.image !== undefined ? instructor.image : (instructor.gender === "male" ? "/img/manHead.png" : "/img/womanHead.png");
+  }
+});
+
+Template.instructorEditor.onRendered(function() {
+    initCanvas(this.$("canvas"), 140, 140, this.data.image, "/img/upload.png");
+  });
+Template.instructorEditor.events({
+  "submit form": function (event) {
+    event.preventDefault();
+  },
+  "click #uploadImg": function(event, template) { 
+    loadImage(template.$('#inputImage'), template.$("canvas")); 
+  },
+  "click #resetImg": function(event, template) { 
+    resetImage(template.$("canvas"), "/img/upload.png"); 
   }
 });
 
 function newInstructor() {
-    return {
-      name: ""
-    }
+  return {
+    name: "",
+    creationDate: new Date()
   }
+}
   
 Template.instructorsPage.helpers({
   instructors: function() {
@@ -22,13 +38,28 @@ Template.instructorsPage.helpers({
   newInstructorDefault: newInstructor,
   saveInstructor: function() {
     return function($form, data) {
+      var image = getDataImage($form.find("canvas"), 128*1024);
+      
       if(data !== undefined) {
-        Instructors.update(data._id, {$set:{name: $form.find("#name").val()}});
+        var set = {name: $form.find("#name").val()};
+        switch(image) {
+        case false: 
+          Instructors.update(data._id, {$set:set});
+          break;
+        case undefined:
+          Instructors.update(data._id, {$set:set, $unset: {image:""}});
+          break;
+        default:
+          set.image = image;
+          Instructors.update(data._id, {$set:set});
+          break;
+        }
       }
       else {
-        var instructors = newInstructor();
-        instructors.name = $form.find("#name").val();
-        Instructors.insert(instructors);
+        var instructor = newInstructor();
+        instructor.name = $form.find("#name").val();
+        if(image !== false) instructor.image = image;
+        Instructors.insert(instructor);
       }
     };
   },
@@ -36,24 +67,5 @@ Template.instructorsPage.helpers({
     return function($form) {
       $form.find("#name").val("");
     };
-  }
-});
-
-Template.instructorsPage.events({
-  "submit .new-instructor": function (event) {
-    // Prevent default browser form submit
-    event.preventDefault();
-
-    // Get value from form element
-    var name = event.target.name.value;
-
-    // Insert a new instructor into the collection
-    Instructors.insert({
-      name: name,
-      createdAt: new Date() // current time   
-    });
-
-    // Clear form
-    event.target.name.value = "";
   }
 });
