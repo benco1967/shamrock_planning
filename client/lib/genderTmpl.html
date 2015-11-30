@@ -1,11 +1,11 @@
 <template name="genderBtn">
   <div class="btn-group genderBtn" data-toggle="buttons">
     <label class="btn btn-primary {{#if isFemale}}active{{/if}}">
-      <input type="radio" name="options" id="female"> 
+      <input type="radio" name="options" id="female" checked="{{isFemale}}"> 
       <i class="fa fa-female"></i>
     </label>
     <label class="btn btn-primary {{#if isMale}}active{{/if}}">
-      <input type="radio" name="options" id="male"> 
+      <input type="radio" name="options" id="male" checked="{{isMale}}"> 
       <i class="fa fa-male"></i>
     </label>
   </div>

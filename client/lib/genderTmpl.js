@@ -6,6 +6,7 @@ getGender = function($form) {
   }
   return null;
 }
+
 Template.genderBtn.helpers({
   isMale: function() {
     var template = Template.instance();
