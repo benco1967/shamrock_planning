@@ -1,0 +1,16 @@
+<div>
+  <div class="pull-right">
+    <button ng-if="!isState('editing')" ng-click="edit()" id="edit" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></button>
+    <div ng-if="isState('editing')" class="btn-group" role="group">
+      <button type="button" id="cancel" ng-click="cancelSave()" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+      <button type="button" id="save" ng-click="save()" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i></button>
+    </div>
+    <button ng-if="!isState('deleting')" ng-click="delete()" id="delete" class="btn btn-primary"><i class="glyphicon glyphicon-trash"></i></button>
+    <div ng-if="isState('deleting')" ng-click="remove()" class="btn-group" role="group">
+      <button type="button" id="cancel" ng-click="cancelRemove()" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+      <button type="button" id="remove" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+    </div>
+  </div>
+  <div transclude-id="display"></div>
+  <div class="item-editing" ng-show="isState('editing')" transclude-id="editor"></div>
+</div>

@@ -1,0 +1,10 @@
+<div class="btn-group" data-toggle="buttons">
+    <label class="btn btn-primary" ng-class="{active: !isMale}" ng-click="change(false)">
+      <input type="radio" name="{{name}}" id="female"> 
+      <i class="fa fa-female"></i>
+    </label>
+    <label class="btn btn-primary" ng-class="{active: isMale}" ng-click="change(true)">
+      <input type="radio" name="{{name}}" id="male" ng-model="isMale"> 
+      <i class="fa fa-male"></i>
+    </label>
+  </div>

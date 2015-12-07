@@ -1,0 +1,58 @@
+<head>
+  <title>Shamrock planning</title>
+  <link rel="shortcut icon" type="image/png" href="/img/favicon.png" sizes="16x16 32x32 64x64">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
+</head>
+
+<body ng-app="PlannerApp">
+  <div ng-controller="MainCtrl">
+    <nav ng-show="!secured" class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/home">
+            <img id="home" alt="Shamrock" src="img/horse32x32.png" style="margin-top: -5px;">
+          </a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-stats">
+          <ul class="nav navbar-nav">
+            <li><a href="/calendar">Calendrier</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">Statistiques <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="stats/week">Semaine</a></li>
+                <li><a href="stats/day">Journée</a></li>
+              </ul>
+            </li>  
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">Configuration <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="config/horses">Chevaux</a></li>
+                <li><a href="config/instructors">Moniteurs</a></li>
+                <li><a href="config/riders">Cavaliers</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="config/lessons">Reprises</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a ng-click="secureMode()"><i class="fa fa-unlock fa-lg"></i></a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <i ng-show="secured" ng-click="unsecureMode()" class="fa fa-lock fa-2x" style="position: absolute; right: 10px; top: 10px;"></i>
+    <div class="spacer" ng-show="!secured"></div>
+    <div class="container-fluid">
+      <div ui-view></div>
+    </div>
+  </div>
+</body>

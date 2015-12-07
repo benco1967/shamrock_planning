@@ -20,3 +20,8 @@ twbs:bootstrap
 reactive-var
 fortawesome:fontawesome
 angular
+angularui:angular-ui-bootstrap
+angularui:ui-calendar
+angularui:ui-select
+angularui:ui-utils
+angularui:angular-ui-router
