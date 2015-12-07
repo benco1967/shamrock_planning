@@ -1,0 +1,6 @@
+<div style="position: relative;">
+  <canvas class="img-thumbnail" ng-click="toggle()" id="canvasImage" ng-style="styleCanvas"></canvas>
+  <button type="button" ng-click="toggle()" name="img" class="btn" ng-style="styleBtn" ng-class="{'btn-danger': modeDelete, 'btn-primary': !modeDelete}"><i class="glyphicon" ng-class="{'glyphicon-trash': modeDelete, 'glyphicon-plus': !modeDelete}"></i></button>
+    
+  <input id="inputImage" type="file" name="inputImage" style="display:none;">
+</div>
