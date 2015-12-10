@@ -10,9 +10,6 @@ angular.module('PlannerApp')
       creationDate: new Date()
     }
   }
-  $scope.getDefaultImage = function(gender) {
-    return gender === "male" ? "/img/manHead.png" : "/img/womanHead.png";
-  }
   $scope.instructor = null;
   $scope.instructors = $scope.$meteorCollection(Instructors, false);
   $scope.resetNew = function() {
