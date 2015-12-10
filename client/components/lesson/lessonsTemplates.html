@@ -1,0 +1,22 @@
+<div>
+  <h2>Modèle de planning reprises</h2>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <new-item
+        on-edit="resetNew()"
+        on-create="create()">
+        <div type="editor"><ng-include src="'client/components/lesson/lessonsTemplateEditor.html'"></ng-include></div>
+      </new-item>
+    </li>
+    <li class="list-group-item" ng-repeat="template in templates">
+      <editable-item
+        on-delete="remove()"
+        on-edit="edit()"
+        on-save="save()"
+        on-cancel-save="cancelSave()">
+        <div type="display"><ng-include src="'client/components/lesson/lessonsTemplateDisplay.html'"></ng-include></div>
+        <div type="editor"><ng-include src="'client/components/lesson/lessonsTemplateEditor.html'"></ng-include></div>
+      </editable-item>
+    </li>
+  </ul>
+</div>

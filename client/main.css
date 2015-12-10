@@ -21,3 +21,47 @@
   padding: 10px;
   border-radius: 4px;
 }
+* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+.lesson-column {
+  width: 19.5%;
+  padding: 0px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+.lesson-column:last-child {
+  margin-right: 0px;
+}
+.lesson-header {
+  border-color: #dddddd;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: -1px;
+  padding: 5px;
+  border-radius: 19px 5px 0px 0px;
+  background-color: #fff;
+}
+.lesson-body {
+  border-color: #dddddd;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: -1px;
+  padding: 5px;
+  height: 34px;
+  background-color: #fff;
+}
+.lesson-body:last-child {
+  margin-bottom: 0px;
+  border-radius: 0px 0px 5px 5px;
+}
+.lesson-body:hover {
+  background-color: #eee;
+}

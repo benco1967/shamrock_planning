@@ -1,0 +1,32 @@
+
+<form id="lessonForm">
+  <div class="form-group">
+    <label for="name">Nom</label>
+    <input type="text" class="form-control" id="hour" placeholder="Nom du modèle" ng-model="template.name">
+  </div>
+</form>
+<div class="row">
+  <div class="col-md-2">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="rider in riders">
+        <ng-include src="'client/components/person/riderDisplay.html'"></ng-include>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-8">
+    <div class="col-md-2 lesson-column" ng-repeat="instructor in instructors">
+      <div class="lesson-header">
+        <ng-include src="'client/components/person/instructorDisplay.html'"></ng-include>
+      </div> 
+      <div class="lesson-body" ng-repeat="i in nbSlots">
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="horse in horses">
+        <ng-include src="'client/components/horse/horseDisplay.html'"></ng-include>
+      </li>
+    </ul>
+  </div>
+</div>

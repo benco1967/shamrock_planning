@@ -63,8 +63,13 @@ angular.module('PlannerApp')
       templateUrl: 'client/components/person/riders.html',
       controller: 'RidersCtrl'
     })
+    .state('templates', {
+      url: '/config/templates',
+      templateUrl: 'client/components/lesson/lessonsTemplates.html',
+      controller: 'LessonsTemplatesCtrl'
+    })
     .state('lessons', {
-      url: '/config/lessons',
+      url: '/config/templates/:id',
       templateUrl: 'client/components/lesson/lessons.html',
       controller: 'LessonsCtrl'
     });
