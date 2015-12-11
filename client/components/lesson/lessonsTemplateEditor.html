@@ -4,6 +4,23 @@
     <label for="name">Nom</label>
     <input type="text" class="form-control" id="hour" placeholder="Nom du modèle" ng-model="template.name">
   </div>
+  <div class="form-group">
+    <label>Plage horaire</label>
+    <div class="form-inline">
+      <div class="form-group">
+        <label for="startHour">de</label>
+        <input type="time" class="form-control" id="startHour" ng-model="template.startHour" ng-change="resetHours(template)">
+      </div>
+      <div class="form-group">
+        <label for="endHour">à</label>
+        <input type="time" class="form-control" id="endHour" ng-model="template.endHour" ng-change="resetHours(template)"/>
+      </div>
+      <div class="form-group">
+        <label for="step">tous les</label>
+        <input type="time" class="form-control" id="step" ng-model="template.step" ng-change="resetHours(template)"/>
+      </div>
+    </div>
+  </div>
 </form>
 <div class="row">
   <div class="col-md-2">
@@ -14,18 +31,33 @@
     </ul>
   </div>
   <div class="col-md-8">
-    <div class="col-md-2 lesson-column" ng-repeat="instructor in instructors">
+    <div class="col-md-1 lesson-column">
       <div class="lesson-header">
-        <ng-include src="'client/components/person/instructorDisplay.html'"></ng-include>
+        <img class="img-circle" src="img/hour.png" width="32"/>
       </div> 
-      <div class="lesson-body" ng-repeat="i in nbSlots">
+      <div class="lesson-body" ng-repeat="time in template.plannings.times">
+        <input type="time" ng-model="time"/> 
+      </div>
+    </div>
+    <div class="col-md-2 lesson-column" ng-repeat="(key, planning) in template.plannings.instructors">
+      <div class="lesson-header">
+        <img-person ng-model="planning.instructor.image" gender="planning.instructor.gender" name="{{planning.instructor.name}}" size="32"></img-person>&nbsp;<span>{{planning.instructor.name}}</span>
+        <i class="glyphicon glyphicon-remove pull-right" ng-click="toggleLessons(planning.lessons)"></i>
+      </div> 
+      <div class="lesson-body" ng-class="{disactived: !lesson.actived}" ng-repeat="lesson in planning.lessons">
+        <span class="pull-right">
+          <span class="label label-primary" ng-show="lesson.actived">{{lesson.riders.length}}</span>&nbsp;
+          <span class="label label-primary" ng-show="lesson.actived">{{lesson.horses.length}}</span>
+          <i class="glyphicon glyphicon-remove" ng-click="toggleLesson(lesson)"></i>
+        </span>
       </div>
     </div>
   </div>
   <div class="col-md-2">
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="horse in horses">
-        <ng-include src="'client/components/horse/horseDisplay.html'"></ng-include>
+        <img-horse ng-model="horse.image" name="{{horse.name}}" size="24"></img-horse>&nbsp;
+<span>{{horse.name}}</span><span class="label label-primary pull-right">{{horse.nbLessons}}</span>
       </li>
     </ul>
   </div>

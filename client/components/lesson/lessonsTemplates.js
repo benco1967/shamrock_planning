@@ -33,22 +33,90 @@
 
 angular.module('PlannerApp')
 .controller('LessonsTemplatesCtrl', ['$scope', '$meteor', function ($scope, $meteor) {
-  
+  function getDate(h) { 
+    var t = new Date(0); 
+    t.setHours(h); 
+    return t; 
+  }
   function newTemplate() {
-    return {
+    var tmp = {
       name: "Nouveau modèle",
       tags: [],
-      creationDate: new Date()
+      creationDate: new Date(),
+      startHour: getDate(8),
+      endHour: getDate(20),
+      step: getDate(1),
+      state: "setHours"
+    };
+    resetHours(tmp);
+    return tmp;
+  }
+  function hourToMilli(hour) {
+    var regex = /(\d{2}):(\d{2}):\d/g;
+    var tmp = regex.exec(hour);
+    return tmp == null || tmp.length != 3 ? 0 : ((+tmp[1] * 60 + +tmp[2]) * 60000);
+  }
+  function resetHours(template) {
+    
+    template.plannings = { 
+      times: [],
+      instructors: {}
+    };
+    var value = template.startHour;
+    var max = template.endHour;
+    var inc = hourToMilli(template.step);
+    if(inc == 0 || value > max) {
+      template.plannings.times.push(new Date(value));
+    }
+    else {
+      for(; value <= max; value = new Date(value.getTime() + inc)) {
+        template.plannings.times.push(new Date(value));
+      }
+    }
+    for(var i = 0; i < $scope.instructors.length; i++) {
+      var planningFor = {
+        instructor: $scope.instructors[i],
+        lessons: []
+      };
+      for(var t = 0; t < template.plannings.times.length; t++) {
+        planningFor.lessons.push({
+          actived: true,
+          horses: [],
+          riders:[]
+        });
+      }
+      
+      template.plannings.instructors[$scope.instructors[i]._id] = planningFor;
+    }
+  }
+  function toggleLesson(lesson, value) {
+    lesson.actived = value == undefined ? !lesson.actived : value;
+    if(!lesson.actived) {
+      lesson.riders = [];
+      lesson.horses = [];
     }
   }
   
+  $scope.toggleLessons = function(lessons) {
+    var value = true;
+    for(var i = 0; i < lessons.length && value; i++) { 
+      if(lessons[i].actived) value = false;
+    }
+    for(var i = 0; i < lessons.length; i++) { 
+      toggleLesson(lessons[i], value);
+    }
+  }
+  
+  $scope.resetHours = resetHours;
+  $scope.toggleLesson = toggleLesson;
+  
   $scope.riderImgSize = 24;
   $scope.riders = $scope.$meteorCollection(Riders, false);
-  $scope.instructorImgSize = 32;
   $scope.instructors = $scope.$meteorCollection(Instructors, false);
-  $scope.nbSlots = [0, 1, 2, 3, 4, 5, 6 ,7 ,8, 9 , 10, 11];
-  $scope.horseImgSize = 24;
   $scope.horses = $scope.$meteorCollection(Horses, false);
+  for(var i = 0; i < $scope.horses.length; i++) {
+    $scope.horses[i].nbLessons = 0;
+  }
   $scope.template = newTemplate();
   $scope.templates = $scope.$meteorCollection(LessonsTemplates, false);
   $scope.resetNew = function() {
