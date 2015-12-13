@@ -25,3 +25,4 @@ angularui:ui-calendar
 angularui:ui-select
 angularui:ui-utils
 angularui:angular-ui-router
+momentjs:moment

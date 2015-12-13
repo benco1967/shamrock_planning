@@ -26,4 +26,4 @@ angular.module('PlannerApp',['angular-meteor', 'ui.router', 'ui.bootstrap'])
       });
     }
   }
-})
+});

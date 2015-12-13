@@ -54,20 +54,53 @@
   border-width: 1px;
   margin-bottom: -1px;
   padding: 5px;
-  height: 34px;
+  height: 40px;
   background-color: #fff;
 }
 .lesson-body:last-child {
   margin-bottom: 0px;
   border-radius: 0px 0px 5px 5px;
 }
+.lesson-body.lesson-body-over {
+  background-color: #cccccc;
+}
+.lesson-body.over-forbidden {
+  background-color: #ff3333;
+}
+.lesson-body.over-alert {
+  background-color: #ffcc33;
+}
+.lesson-body.over-warning {
+  background-color: #ffff33;
+}
+.lesson-body.over-ok {
+  background-color: #66ff66;
+}
 .lesson-body input {
   border: 0px;
-}
-.lesson-body:hover {
-  background-color: #eee;
 }
 .lesson-body.disactived {
   background-color: #eee;
   border-color: #dddddd #eee;
+}
+.line-through {
+  text-decoration: line-through;
+}
+.sh {
+  display: inline-block;
+  height:18px;
+  width:18px;
+  line-height: 18px;
+  background-image: url("/img/sh_icons_black.png");
+  background-repeat: no-repeat;
+}
+
+.sh.sh-helmet {
+  background-position: 0     0;
+}
+.sh.sh-horse {
+  background-position: -18px     0;
+}
+.sh.sh-saddle {
+  background-position: -36px     0;
 }
