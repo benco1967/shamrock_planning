@@ -1,45 +1,79 @@
 angular.module('PlannerApp')
 
 .directive('editableItem', function() {
+  var currentEditingScope = false;
+  var templateUrl = null;
   return {
     restrict: 'E',
     transclude: true,
     scope: {
       saveFct: '&onSave',
       deleteFct: '&onDelete',
-      startEditFct: '&onEdit',
-      cancelSaveFct: '&onCancelSave'
+      editFct: '&onEdit',
+      createFct: '&onCreate',
+      cancelSaveFct: '&onCancelEdit'
     },
     controller: function($scope) {
+      function setState(state) {
+        switch(state) {
+          case "editing":
+          case "deleting":
+            currentEditingScope = $scope.$id;
+            $scope.state = state;
+            break;
+          case "wait":
+            if(currentEditingScope === $scope.$id) {
+              currentEditingScope = false;
+            }
+            $scope.state = state;
+            break;
+        }
+      }
       $scope.state = 'wait';
       $scope.isState = function(state) {
         return $scope.state == state;
       }
 
       $scope.edit = function() {
-        $scope.startEditFct && $scope.startEditFct();
-        $scope.state = 'editing';
+        $scope.editFct && $scope.editFct();
+        setState('editing');
       };
       $scope.save = function() {
         $scope.saveFct && $scope.saveFct();
-        $scope.cancel();
+        setState('wait');
+      };
+      $scope.create = function() {
+        $scope.createFct && $scope.createFct();
+        setState('wait');
       };
       $scope.delete = function() {
-        $scope.state = 'deleting';
+        setState('deleting');
       };
       $scope.remove = function() {
         $scope.deleteFct && $scope.deleteFct();
-        $scope.cancel();
+        setState('wait');
       };
-      $scope.cancelSave = function() {
+      $scope.cancelEdit = function() {
         $scope.cancelSaveFct && $scope.cancelSaveFct();
-        $scope.cancel();
+        setState('wait');
       };
-      $scope.cancel = function() {
-        $scope.state = 'wait';
+      $scope.cancelRemove = function() {
+        setState('wait');
       };
+      $scope.$watch(function() { return currentEditingScope; }, function() {
+        if(currentEditingScope !== $scope.$id) {
+          switch($scope.state) {
+            case "editing" : $scope.cancelEdit(); break;
+            case "deleting" : $scope.cancelRemove(); break;
+          }
+        }
+      });
     },
     link: function (scope, elt, attrs, ctrl, transcludeFct) {
+      scope.withCreate = attrs.onCreate !== undefined;
+      scope.withEdit = attrs.onSave !== undefined;
+      scope.withDelete = attrs.onDelete !== undefined;
+      
       transcludeFct(function(clone) {
         angular.forEach(clone, function (cloneElt) {
           // node type 3 is "text" node

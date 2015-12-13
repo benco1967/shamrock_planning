@@ -2,18 +2,18 @@
   <h2>Moniteurs</h2>
   <ul class="list-group">
     <li class="list-group-item">
-      <new-item
+      <editable-item
         on-edit="resetNew()"
         on-create="create()">
         <div type="editor"><ng-include src="'client/components/person/riderEditor.html'"></ng-include></div>
-      </new-item>
+      </editable-item>
     </li>
     <li class="list-group-item" ng-repeat="rider in riders">
       <editable-item
         on-delete="remove()"
         on-edit="edit()"
         on-save="save()"
-        on-cancel-save="cancelSave()">
+        on-cancel-edit="cancelSave()">
         <div type="display"><ng-include src="'client/components/person/riderDisplay.html'"></ng-include></div>
         <div type="editor"><ng-include src="'client/components/person/riderEditor.html'"></ng-include></div>
       </editable-item>
