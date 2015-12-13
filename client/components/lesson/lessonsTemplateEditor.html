@@ -43,7 +43,7 @@
     </div>
     <div class="col-md-2 lesson-column" ng-repeat="(key, planning) in planner.plannings">
       <div class="lesson-header">
-        <img-person ng-model="planning.instructor.image" gender="planning.instructor.gender" name="{{planning.instructor.name}}" size="32"></img-person>&nbsp;<span>{{planning.instructor.name}}</span>
+        <img-person ng-model="planning.instructor.image" gender="planning.instructor.gender" name="{{planning.instructor.name}}" size="32"></img-person>&nbsp;<strong>{{planning.instructor.name}}</strong>
         <i class="glyphicon glyphicon-remove pull-right" ng-click="planner.toggleLessons(planning.lessons)"></i>
       </div> 
       <div class="lesson-body" ng-class="{'lesson-body-over': lesson.isOver, disactived: !lesson.actived}" droppable-horse-and-rider lesson="lesson" planner="planner" ng-repeat="lesson in planning.lessons">

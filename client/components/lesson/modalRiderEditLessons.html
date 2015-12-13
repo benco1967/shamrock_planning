@@ -1,0 +1,21 @@
+ <div class="modal-header">
+  <h4 class="modal-title">
+    Reprises de 
+    <img-person ng-model="image" gender="gender" name="{{name}}" size="24"></img-person> 
+    {{name}}
+  </h4>
+</div>
+<div class="modal-body">
+  <span>Sélectionnez les reprises à supprimer</span>
+  <h4>Reprises</h4>
+  <ul class="list-no-indent">
+    <li ng-repeat="lesson in lessons">
+      <img-person ng-model="lesson.image" gender="lesson.gender" name="{{lesson.name}}" size="24"></img-person>&nbsp;<span>{{lesson.name}} {{lesson.hour}}</span>
+      <i class="glyphicon" ng-class="{'glyphicon-trash': lesson.selected}"></i>
+    </li>
+  </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Supprimer</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Annuler</button>
+</div>

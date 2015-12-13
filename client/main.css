@@ -86,6 +86,13 @@
 .line-through {
   text-decoration: line-through;
 }
+ul.list-no-indent {
+  padding-left: 20px;
+}
+
+ul.list-no-indent li {
+  margin-top: 2px;
+}
 .sh {
   display: inline-block;
   height:18px;

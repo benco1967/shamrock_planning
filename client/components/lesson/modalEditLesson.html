@@ -1,26 +1,28 @@
  <div class="modal-header">
-  <h3 class="modal-title">Reprises</h3>
+  <h3 class="modal-title">
+    Reprise de {{hour}} de 
+    <img-person ng-model="image" gender="gender" name="{{name}}" size="24"></img-person> 
+    {{name}}
+  </h3>
 </div>
 <div class="modal-body">
-  <span>Sélectionnez les cavaliers et chevaux à supprimer</span>
+  <p>Sélectionnez les cavaliers et chevaux à supprimer</p>
   <div class="row">
     <div class="col-md-6">
-      <ul>
-        <li ng-repeat="rider in riders">
-          <button class="btn btn-default btn-xs" ng-click="rider.selected = !rider.selected" style="margin-top:2px">
-            <i class="glyphicon" ng-class="{'glyphicon-remove': !rider.selected, 'glyphicon-trash': rider.selected}"></i>
-          </button> 
-          <span ng-class="{'line-through': rider.selected}">{{rider.name}}</span>
+      <h4>Cavaliers</h4>
+      <ul class="list-no-indent">
+        <li ng-repeat="rider in riders" ng-click="rider.selected = !rider.selected" ng-class="{'line-through': rider.selected}">
+          <img-person ng-model="rider.image" gender="rider.gender" name="{{rider.name}}" size="24"></img-person>&nbsp;<span>{{rider.name}}</span>
+          <i class="glyphicon" ng-class="{'glyphicon-trash': rider.selected}"></i>
         </li>
       </ul>
     </div>
     <div class="col-md-6">
-      <ul>
-        <li ng-repeat="rider in horses">
-          <button class="btn btn-default btn-xs" ng-click="rider.selected = !rider.selected" style="margin-top:2px">
-            <i class="glyphicon" ng-class="{'glyphicon-remove': !rider.selected, 'glyphicon-trash': rider.selected}"></i>
-          </button> 
-          <span ng-class="{'line-through': rider.selected}">{{rider.name}}</span>
+      <h4>Chevaux</h4>
+      <ul class="list-no-indent">
+        <li ng-repeat="horse in horses" ng-click="horse.selected = !horse.selected" ng-class="{'line-through': horse.selected}">
+          <img-horse ng-model="horse.image" name="{{horse.name}}" size="24"></img-horse>&nbsp;<span>{{horse.name}}</span>&nbsp;
+          <i class="glyphicon" ng-class="{'glyphicon-trash': horse.selected}"></i>
         </li>
       </ul>
     </div>
