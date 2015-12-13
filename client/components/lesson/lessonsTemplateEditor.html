@@ -47,7 +47,7 @@
         <i class="glyphicon glyphicon-remove pull-right" ng-click="planner.toggleLessons(planning.lessons)"></i>
       </div> 
       <div class="lesson-body" ng-class="{'lesson-body-over': lesson.isOver, disactived: !lesson.actived}" droppable-horse-and-rider lesson="lesson" planner="planner" ng-repeat="lesson in planning.lessons">
-        <span ng-show="lesson.actived">
+        <span ng-show="lesson.actived" ng-click="planner.editLesson(lesson)">
           <span popover-title="Cavaliers" popover-placement="left" popover-template="'client/components/lesson/riderLessonPopover.html'" popover-trigger="mouseenter"><i class="sh sh-helmet"></i> {{lesson.riders.length}}</span> / 
           <span popover-title="Chevaux" popover-placement="right" popover-template="'client/components/lesson/horseLessonPopover.html'" popover-trigger="mouseenter" class=""><i class="sh sh-horse"></i> {{lesson.horses.length}}</span>
         </span>
