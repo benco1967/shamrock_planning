@@ -10,6 +10,7 @@
     </li>
     <li class="list-group-item" ng-repeat="horse in horses">
       <editable-item
+        id="horse._id"
         on-delete="remove()"
         on-edit="edit()"
         on-save="save()"

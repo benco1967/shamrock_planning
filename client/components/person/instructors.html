@@ -10,6 +10,7 @@
     </li>
     <li class="list-group-item" ng-repeat="instructor in instructors">
       <editable-item
+        id="instructor._id"
         on-delete="remove()"
         on-edit="edit()"
         on-save="save()"

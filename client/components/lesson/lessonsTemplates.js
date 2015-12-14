@@ -472,6 +472,8 @@ angular.module('PlannerApp')
   $scope.duplicate = function() {
     var tmp = angular.copy(this.template);
     delete tmp._id;
+    tmp.creationDate = new Date();
+    return LessonsTemplates.insert(tmp);
   }; 
   $scope.remove = function() {
     LessonsTemplates.remove(this.template._id);

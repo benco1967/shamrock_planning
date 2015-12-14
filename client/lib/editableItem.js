@@ -1,29 +1,32 @@
 angular.module('PlannerApp')
 
-.directive('editableItem', function() {
-  var currentEditingScope = false;
+.directive('editableItem', ['$log', function($log) {
+  var currentEditingId = false;
+  var editDuplicate = false;
   var templateUrl = null;
   return {
     restrict: 'E',
     transclude: true,
     scope: {
-      saveFct: '&onSave',
-      deleteFct: '&onDelete',
-      editFct: '&onEdit',
-      createFct: '&onCreate',
-      cancelSaveFct: '&onCancelEdit'
+      _id: '=id',
+      saveFn: '&onSave',
+      deleteFn: '&onDelete',
+      editFn: '&onEdit',
+      createFn: '&onCreate',
+      cancelSaveFn: '&onCancelEdit',
+      duplicateFn: '&onDuplicate'
     },
     controller: function($scope) {
       function setState(state) {
         switch(state) {
           case "editing":
           case "deleting":
-            currentEditingScope = $scope.$id;
+            currentEditingId = $scope._id;
             $scope.state = state;
             break;
           case "wait":
-            if(currentEditingScope === $scope.$id) {
-              currentEditingScope = false;
+            if(currentEditingId === $scope._id) {
+              currentEditingId = false;
             }
             $scope.state = state;
             break;
@@ -34,47 +37,57 @@ angular.module('PlannerApp')
         return $scope.state == state;
       }
 
+      $scope.duplicate = function() {
+        currentEditingId = $scope.duplicateFn && $scope.duplicateFn();
+        editDuplicate = true;
+      }
       $scope.edit = function() {
-        $scope.editFct && $scope.editFct();
+        $scope.editFn && $scope.editFn();
         setState('editing');
       };
       $scope.save = function() {
-        $scope.saveFct && $scope.saveFct();
+        $scope.saveFn && $scope.saveFn();
         setState('wait');
       };
       $scope.create = function() {
-        $scope.createFct && $scope.createFct();
+        $scope.createFn && $scope.createFn();
         setState('wait');
       };
       $scope.delete = function() {
         setState('deleting');
       };
       $scope.remove = function() {
-        $scope.deleteFct && $scope.deleteFct();
+        $scope.deleteFn && $scope.deleteFn();
         setState('wait');
       };
       $scope.cancelEdit = function() {
-        $scope.cancelSaveFct && $scope.cancelSaveFct();
+        $scope.cancelSaveFn && $scope.cancelSaveFn();
         setState('wait');
       };
       $scope.cancelRemove = function() {
         setState('wait');
       };
-      $scope.$watch(function() { return currentEditingScope; }, function() {
-        if(currentEditingScope !== $scope.$id) {
+      $scope.$watch(function() { return currentEditingId; }, function() {
+        if(currentEditingId !== $scope._id) {
           switch($scope.state) {
             case "editing" : $scope.cancelEdit(); break;
             case "deleting" : $scope.cancelRemove(); break;
           }
         }
+        else if($scope.state == 'wait' && editDuplicate) {
+          editDuplicate = false;
+          $scope.edit();
+        }
       });
+      $log.info('_id ' + $scope._id);
     },
-    link: function (scope, elt, attrs, ctrl, transcludeFct) {
+    link: function (scope, elt, attrs, ctrl, transcludeFn) {
       scope.withCreate = attrs.onCreate !== undefined;
       scope.withEdit = attrs.onSave !== undefined;
       scope.withDelete = attrs.onDelete !== undefined;
+      scope.withDuplicate = attrs.onDuplicate !==undefined;
       
-      transcludeFct(function(clone) {
+      transcludeFn(function(clone) {
         angular.forEach(clone, function (cloneElt) {
           // node type 3 is "text" node
           if (cloneElt.nodeType === 3)  {
@@ -98,4 +111,4 @@ angular.module('PlannerApp')
     },
     templateUrl: 'client/lib/editableItem.html'
   };
-});
+}]);

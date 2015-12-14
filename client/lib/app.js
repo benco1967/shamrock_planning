@@ -1,8 +1,8 @@
 angular.module('PlannerApp',['angular-meteor', 'ui.router', 'ui.bootstrap'])
 .factory("MultiTransclude", function() {
   return {
-    transclude: function(iElem, transcludeFct) {
-       transcludeFct( function(clone) {
+    transclude: function(iElem, transcludeFn) {
+       transcludeFn(function(clone) {
         angular.forEach( clone, function (cloneEl) {
           // node type 3 is "text" node
           if (cloneEl.nodeType === 3)  {
