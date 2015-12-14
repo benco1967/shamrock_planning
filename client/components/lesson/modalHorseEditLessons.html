@@ -9,7 +9,7 @@
   <span>Sélectionnez les reprises à supprimer</span>
   <h4>Reprises</h4>
   <ul class="list-no-indent">
-    <li ng-repeat="lesson in lessons">
+    <li ng-repeat="lesson in lessons" ng-click="lesson.selected = !lesson.selected" ng-class="{'line-through': lesson.selected}">
       <img-person ng-model="lesson.image" gender="lesson.gender" name="{{lesson.name}}" size="24"></img-person>&nbsp;<span>{{lesson.name}} {{lesson.hour}}</span>
       <i class="glyphicon" ng-class="{'glyphicon-trash': lesson.selected}"></i>
     </li>

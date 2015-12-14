@@ -236,7 +236,24 @@ angular.module('PlannerApp')
     drop(this, id, lesson, "riders");
   };
   
-  Planner.prototype.removeFromLesson = function(attr, object, lesson) {
+  Planner.prototype.removeObjectFromLesson = function(attr, object, lesson) {
+    // suppress the lesson in the obect
+    object.nbLessons--;
+    delete object.lessons[lesson.index];
+    object.popover = getPopoverLesson(this, object.lessons);
+    // suppress the object in the lesson
+    var objects = lesson[attr];
+    var index = objects.indexOf(object._id);
+    lesson[attr].splice(index, 1);
+    lesson[attr + "Popover"] = getPopoverFor(this[attr], lesson[attr], noObjPopover[attr]);
+    // suppress the object in the times
+    var time = this.times[lesson.index];
+    var objects = time[attr];
+    var index = objects.indexOf(object._id);
+    time[attr].splice(index, 1);
+    time[attr + "Popover"] = getPopoverFor(this[attr], lesson[attr], noObjPopover[attr]);
+  };
+  Planner.prototype.removeFromObject = function(attr, lesson, object) {
     // suppress the lesson in the obect
     object.nbLessons--;
     delete object.lessons[lesson.index];
@@ -258,7 +275,7 @@ angular.module('PlannerApp')
     var tmp = object;
     var self = this;
     var modalInstance = $modal.open({
-      templateUrl: 'client/components/lesson/modalEditLessons.html',
+      templateUrl: attr == 'horses' ? 'client/components/lesson/modalHorseEditLessons.html' : 'client/components/lesson/modalRiderEditLessons.html',
       controller: 'ModalEditLessonsCtrl',
       size: 'sm',
       resolve: {
@@ -273,8 +290,36 @@ angular.module('PlannerApp')
 
     modalInstance.result.then(function(lessonsToRemove) {
       for(var i = 0; i < lessonsToRemove.length; i++) {
-        self.removeFromLesson(attr, object, lessonsToRemove[i]);
+        self.removeObjectFromLesson(attr, object, lessonsToRemove[i]);
       }
+    });
+  }
+  Planner.prototype.editLesson = function(lesson) {
+    var tmp = lesson;
+    var self = this;
+    if(lesson.riders.length === 0 && lesson.horses.length === 0) return;
+    var modalInstance = $modal.open({
+      templateUrl: 'client/components/lesson/modalEditLesson.html',
+      controller: 'ModalEditLessonCtrl',
+      resolve: {
+        lesson: function() {
+          return tmp;
+        },
+        planner: function () {
+          return self;
+        }
+      }
+    });
+
+    modalInstance.result.then(function(objectsToRemove) {
+      function remove(attr) {
+        for(var i = 0; i < objectsToRemove[attr].length; i++) {
+          var object = self[attr][objectsToRemove[attr][i]];
+          self.removeObjectFromLesson(attr, object, tmp);
+        }
+      }
+      remove('riders');
+      remove('horses');
     });
   }
   
@@ -328,12 +373,18 @@ angular.module('PlannerApp')
   return create;
 }])
 .controller('ModalEditLessonsCtrl', ['$scope', '$modalInstance', 'object', 'planner', function ($scope, $modalInstance, object, planner) {
+  $scope.name = object.name;
+  $scope.image = object.image;
+  $scope.gender = object.gender;
   $scope.lessons = [];
   var lessons = object.lessons;
   for(i in lessons) {
     var lesson = lessons[i];
+    var instructor = planner.plannings[lesson.instructor].instructor;
     $scope.lessons.push({
-      name: planner.plannings[lesson.instructor].instructor.name,
+      name: instructor.name,
+      image: instructor.image,
+      gender: instructor.gender,
       hour: moment(planner.times[i].hour).format("HH:mm"),
       lesson: lesson,
       selected: false
@@ -348,6 +399,45 @@ angular.module('PlannerApp')
       }
     }
     $modalInstance.close(selectedLessons);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+}])
+.controller('ModalEditLessonCtrl', ['$scope', '$modalInstance', 'lesson', 'planner', function ($scope, $modalInstance, lesson, planner) {
+  var instructor = planner.plannings[lesson.instructor].instructor;
+  $scope.name = instructor.name;
+  $scope.image = instructor.image;
+  $scope.gender = instructor.gender;
+  $scope.hour = moment(planner.times[lesson.index].hour).format("HH:mm");
+  function setObjects(attr) {
+    $scope[attr] = [];
+    for(var i = 0; i < lesson[attr].length; i++) {
+      var object = planner[attr][lesson[attr][i]];
+      $scope[attr].push({
+        name: object.name,
+        image: object.image,
+        gender: object.gender,
+        _id: object._id,
+        selected: false
+      });
+    }
+  }
+  setObjects('riders');
+  setObjects('horses');
+  
+  $scope.ok = function () {
+    function getObjects(attr) {
+      var selectedObjects = [];
+      for(var i = 0; i < $scope[attr].length; i++) {
+        if($scope[attr][i].selected) {
+          selectedObjects.push($scope[attr][i]._id);
+        }
+      }
+      return selectedObjects;
+    }
+    $modalInstance.close({riders: getObjects('riders'), horses: getObjects('horses')});
   };
 
   $scope.cancel = function () {
