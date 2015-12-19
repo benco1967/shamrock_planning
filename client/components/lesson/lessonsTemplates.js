@@ -507,7 +507,7 @@ angular.module('PlannerApp')
     el.addEventListener(
         'dragstart',
         function(e) {
-            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.effectAllowed = 'copy';
             var _id = attrs.draggableRider;
             e.dataTransfer.setData('application/horses.planner.rider', _id);
             e.dataTransfer.setData(mimeType.fromId(_id), _id);
@@ -542,7 +542,7 @@ angular.module('PlannerApp')
     el.addEventListener(
         'dragstart',
         function(e) {
-            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.effectAllowed = 'copy';
             var _id = attrs.draggableHorse;
             e.dataTransfer.setData('application/horses.planner.horse', _id);
             e.dataTransfer.setData(mimeType.fromId(_id), _id);
@@ -594,7 +594,7 @@ angular.module('PlannerApp')
       el.addEventListener(
         'dragover',
         function(e) {
-          e.dataTransfer.dropEffect = 'move'; 
+          e.dataTransfer.dropEffect = 'copy'; 
           // allows us to drop
           if (e.preventDefault) e.preventDefault();
           setOverClass(this, e, scope);
