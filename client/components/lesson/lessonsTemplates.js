@@ -1,4 +1,10 @@
 angular.module('PlannerApp')
+/***
+*    8b    d8 88 8b    d8 888888     888888 Yb  dP 88""Yb 888888 
+*    88b  d88 88 88b  d88 88__         88    YbdP  88__dP 88__   
+*    88YbdP88 88 88YbdP88 88""         88     8P   88"""  88""   
+*    88 YY 88 88 88 YY 88 888888       88    dP    88     888888 
+*/
 .factory('mimeType', [function() {
   function replaceFn(match, p1, p2, p3){
     return p1 + "_" + p2.toLowerCase() + p3;
@@ -33,6 +39,15 @@ angular.module('PlannerApp')
     }
   };
 }])
+/***
+*    88""Yb 88        db    88b 88 88b 88 888888 88""Yb      dP""b8 88""Yb 888888    db    888888  dP"Yb  88""Yb 
+*    88__dP 88       dPYb   88Yb88 88Yb88 88__   88__dP     dP   `" 88__dP 88__     dPYb     88   dP   Yb 88__dP 
+*    88"""  88  .o  dP__Yb  88 Y88 88 Y88 88""   88"Yb      Yb      88"Yb  88""    dP__Yb    88   Yb   dP 88"Yb  
+*    88     88ood8 dP""""Yb 88  Y8 88  Y8 888888 88  Yb      YboodP 88  Yb 888888 dP""""Yb   88    YbodP  88  Yb 
+*
+* Planner creator
+* planner is the object that allows to create the planning
+*/
 .factory('plannerCreator', ['$sce', '$modal', 'mimeType', function($sce, $modal, mimeType) {
   
   var noLessonPopover = $sce.trustAsHtml("<strong>Aucune reprise</strong>");
@@ -323,6 +338,16 @@ angular.module('PlannerApp')
   }
   return create;
 }])
+
+/****************************************************************************
+*
+*     dP"Yb  88""Yb  88888 888888  dP""b8 888888  .o. .dP"Y8     88     888888 .dP"Y8 .dP"Y8  dP"Yb  88b 88 .dP"Y8     888888 8888b.  88 888888  dP"Yb  88""Yb 
+*    dP   Yb 88__dP     88 88__   dP   `"   88   ,dP' `Ybo."     88     88__   `Ybo." `Ybo." dP   Yb 88Yb88 `Ybo."     88__    8I  Yb 88   88   dP   Yb 88__dP 
+*    Yb   dP 88""Yb o.  88 88""   Yb        88        o.`Y8b     88  .o 88""   o.`Y8b o.`Y8b Yb   dP 88 Y88 o.`Y8b     88""    8I  dY 88   88   Yb   dP 88"Yb  
+*     YbodP  88oodP "bodP' 888888  YboodP   88        8bodP'     88ood8 888888 8bodP' 8bodP'  YbodP  88  Y8 8bodP'     888888 8888Y"  88   88    YbodP  88  Yb 
+*
+* Modal controller to edit the object's lessons
+*/
 .controller('ModalEditLessonsCtrl', ['$scope', '$modalInstance', 'object', 'planner', function ($scope, $modalInstance, object, planner) {
   $scope.name = object.name;
   $scope.image = object.image;
@@ -356,6 +381,16 @@ angular.module('PlannerApp')
     $modalInstance.dismiss('cancel');
   };
 }])
+
+/***************************************************************************************
+*
+*    88     888888 .dP"Y8 .dP"Y8  dP"Yb  88b 88  .o. .dP"Y8      dP"Yb  88""Yb  88888 888888  dP""b8 888888 .dP"Y8     888888 8888b.  88 888888  dP"Yb  88""Yb 
+*    88     88__   `Ybo." `Ybo." dP   Yb 88Yb88 ,dP' `Ybo."     dP   Yb 88__dP     88 88__   dP   `"   88   `Ybo."     88__    8I  Yb 88   88   dP   Yb 88__dP 
+*    88  .o 88""   o.`Y8b o.`Y8b Yb   dP 88 Y88      o.`Y8b     Yb   dP 88""Yb o.  88 88""   Yb        88   o.`Y8b     88""    8I  dY 88   88   Yb   dP 88"Yb  
+*    88ood8 888888 8bodP' 8bodP'  YbodP  88  Y8      8bodP'      YbodP  88oodP "bodP' 888888  YboodP   88   8bodP'     888888 8888Y"  88   88    YbodP  88  Yb 
+*
+* Modal controller to edit the lesson's objects
+*/
 .controller('ModalEditLessonCtrl', ['$scope', '$modalInstance', 'lesson', 'planner', function ($scope, $modalInstance, lesson, planner) {
   var instructor = planner.plannings[lesson.instructor].instructor;
   $scope.name = instructor.name;
@@ -395,6 +430,16 @@ angular.module('PlannerApp')
     $modalInstance.dismiss('cancel');
   };
 }])
+
+/*************************************************************************************************************************
+
+888888 888888 8b    d8 88""Yb 88        db    888888 888888     88     888888 .dP"Y8 .dP"Y8  dP"Yb  88b 88      dP""b8  dP"Yb  88b 88 888888 88""Yb  dP"Yb  88     88     888888 88""Yb 
+  88   88__   88b  d88 88__dP 88       dPYb     88   88__       88     88__   `Ybo." `Ybo." dP   Yb 88Yb88     dP   `" dP   Yb 88Yb88   88   88__dP dP   Yb 88     88     88__   88__dP 
+  88   88""   88YbdP88 88"""  88  .o  dP__Yb    88   88""       88  .o 88""   o.`Y8b o.`Y8b Yb   dP 88 Y88     Yb      Yb   dP 88 Y88   88   88"Yb  Yb   dP 88  .o 88  .o 88""   88"Yb  
+  88   888888 88 YY 88 88     88ood8 dP""""Yb   88   888888     88ood8 888888 8bodP' 8bodP'  YbodP  88  Y8      YboodP  YbodP  88  Y8   88   88  Yb  YbodP  88ood8 88ood8 888888 88  Yb 
+
+* Controller of the template lesson
+*/
 .controller('LessonsTemplatesCtrl', ['$scope', '$meteor', '$modal', 'plannerCreator', function ($scope, $meteor, $modal, plannerCreator) {
   function newPlanner() {
     return plannerCreator($scope);
@@ -496,6 +541,14 @@ angular.module('PlannerApp')
     angular.copy(this.templateCopy, this.template);
   };
 }])
+/************************************************************************
+*
+*    8888b.  88""Yb    db     dP""b8  dP""b8    db    88""Yb 88     888888 88""Yb 88 8888b.  888888 88""Yb 
+*     8I  Yb 88__dP   dPYb   dP   `" dP   `"   dPYb   88__dP 88     88__   88__dP 88  8I  Yb 88__   88__dP 
+*     8I  dY 88"Yb   dP__Yb  Yb  "88 Yb  "88  dP__Yb  88""Yb 88  .o 88""   88"Yb  88  8I  dY 88""   88"Yb  
+*    8888Y"  88  Yb dP""""Yb  YboodP  YboodP dP""""Yb 88oodP 88ood8 888888 88  Yb 88 8888Y"  888888 88  Yb 
+*
+*/
 .directive('draggableRider', ["mimeType", function(mimeType) {
   function getRiderTxt(_id) {
     var rider = Riders.findOne({ _id: _id });
@@ -531,6 +584,14 @@ angular.module('PlannerApp')
     );
   }
 }])
+/*************************************************************************************
+*
+*    8888b.  88""Yb    db     dP""b8  dP""b8    db    88""Yb 88     888888 88  88  dP"Yb  88""Yb .dP"Y8 888888 
+*     8I  Yb 88__dP   dPYb   dP   `" dP   `"   dPYb   88__dP 88     88__   88  88 dP   Yb 88__dP `Ybo." 88__   
+*     8I  dY 88"Yb   dP__Yb  Yb  "88 Yb  "88  dP__Yb  88""Yb 88  .o 88""   888888 Yb   dP 88"Yb  o.`Y8b 88""   
+*    8888Y"  88  Yb dP""""Yb  YboodP  YboodP dP""""Yb 88oodP 88ood8 888888 88  88  YbodP  88  Yb 8bodP' 888888 
+*
+*/
 .directive('draggableHorse', ["mimeType", function(mimeType) {
   function getHorseTxt(_id) {
     var horse = Horses.findOne({ _id: _id });
@@ -566,6 +627,13 @@ angular.module('PlannerApp')
     );
   }
 }])
+/*****************************************************************************************
+*
+*    8888b.  88""Yb  dP"Yb  88""Yb 88""Yb    db    88""Yb 88     888888 88  88  dP"Yb  88""Yb .dP"Y8 888888    db    88b 88 8888b.  88""Yb 88 8888b.  888888 88""Yb 
+*     8I  Yb 88__dP dP   Yb 88__dP 88__dP   dPYb   88__dP 88     88__   88  88 dP   Yb 88__dP `Ybo." 88__     dPYb   88Yb88  8I  Yb 88__dP 88  8I  Yb 88__   88__dP 
+*     8I  dY 88"Yb  Yb   dP 88"""  88"""   dP__Yb  88""Yb 88  .o 88""   888888 Yb   dP 88"Yb  o.`Y8b 88""    dP__Yb  88 Y88  8I  dY 88"Yb  88  8I  dY 88""   88"Yb  
+*    8888Y"  88  Yb  YbodP  88     88     dP""""Yb 88oodP 88ood8 888888 88  88  YbodP  88  Yb 8bodP' 888888 dP""""Yb 88  Y8 8888Y"  88  Yb 88 8888Y"  888888 88  Yb 
+*/
 .directive('droppableHorseAndRider', ["mimeType", function(mimeType) {
   function setOverClass(el, e, scope) {
     var overClass = scope.planner.overClassHorse(e.dataTransfer.types, scope.lesson.index);
