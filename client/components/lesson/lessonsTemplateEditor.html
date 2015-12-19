@@ -26,7 +26,7 @@
   <div class="col-md-2">
     <ul class="list-group">
       <li class="list-group-item" ng-mouseover="setOver(rider)" ng-mouseleave="setLeave(rider)" draggable-rider="{{rider._id}}" ng-repeat="(key, rider) in planner.riders">
-        <span popover-title="Reprises" popover-placement="right" popover-template="'client/components/lesson/riderPopover.html'" popover-trigger="mouseenter"><i class="sh sh-saddle" ng-click="planner.editLessons('riders', rider)"></i> {{rider.nbLessons}}</span>
+        <span popover-title="Reprises" popover-placement="right" popover-template="'client/components/lesson/riderPopover.html'" popover-trigger="mouseenter"><i class="sh sh-saddle" ng-click="editLessons(planner, 'riders', rider)"></i> {{rider.nbLessons}}</span>
         <span class="pull-right">{{rider.name}}&nbsp;<img-person ng-model="rider.image" gender="rider.gender" name="{{rider.name}}" size="24"></img-person>
         </span>
       </li>
@@ -47,7 +47,7 @@
         <i class="glyphicon glyphicon-remove pull-right" ng-click="planner.toggleLessons(planning.lessons)"></i>
       </div> 
       <div class="lesson-body" ng-class="{'lesson-body-over': lesson.isOver, disactived: !lesson.actived}" droppable-horse-and-rider lesson="lesson" planner="planner" ng-repeat="lesson in planning.lessons">
-        <span ng-show="lesson.actived" ng-click="planner.editLesson(lesson)">
+        <span ng-show="lesson.actived" ng-click="editLesson(planner, lesson)">
           <span popover-title="Cavaliers" popover-placement="left" popover-template="'client/components/lesson/riderLessonPopover.html'" popover-trigger="mouseenter"><i class="sh sh-helmet"></i> {{lesson.riders.length}}</span> / 
           <span popover-title="Chevaux" popover-placement="right" popover-template="'client/components/lesson/horseLessonPopover.html'" popover-trigger="mouseenter" class=""><i class="sh sh-horse"></i> {{lesson.horses.length}}</span>
         </span>
@@ -62,7 +62,7 @@
       <li class="list-group-item" ng-mouseover="setOver(horse)" ng-mouseleave="setLeave(horse)" draggable-horse="{{horse._id}}" ng-repeat="(key, horse) in planner.horses">
         <img-horse ng-model="horse.image" name="{{horse.name}}" size="24"></img-horse>&nbsp;
         <span>{{horse.name}}</span>
-        <span class="pull-right" popover-title="Reprises" popover-placement="left" popover-template="'client/components/lesson/horsePopover.html'" popover-trigger="mouseenter" ng-click="planner.editLessons('horses', horse)"><i class="sh sh-saddle"></i> {{horse.nbLessons}}</span>
+        <span class="pull-right" popover-title="Reprises" popover-placement="left" popover-template="'client/components/lesson/horsePopover.html'" popover-trigger="mouseenter" ng-click="editLessons(planner, 'horses', horse)"><i class="sh sh-saddle"></i> {{horse.nbLessons}}</span>
       </li>
     </ul>
   </div>

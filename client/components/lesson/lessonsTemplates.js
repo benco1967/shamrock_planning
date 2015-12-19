@@ -271,58 +271,6 @@ angular.module('PlannerApp')
     time[attr + "Popover"] = getPopoverFor(this[attr], lesson[attr], noObjPopover[attr]);
   };
   
-  Planner.prototype.editLessons = function(attr, object) {
-    var tmp = object;
-    var self = this;
-    var modalInstance = $modal.open({
-      templateUrl: attr == 'horses' ? 'client/components/lesson/modalHorseEditLessons.html' : 'client/components/lesson/modalRiderEditLessons.html',
-      controller: 'ModalEditLessonsCtrl',
-      size: 'sm',
-      resolve: {
-        object: function() {
-          return tmp;
-        },
-        planner: function () {
-          return self;
-        }
-      }
-    });
-
-    modalInstance.result.then(function(lessonsToRemove) {
-      for(var i = 0; i < lessonsToRemove.length; i++) {
-        self.removeObjectFromLesson(attr, object, lessonsToRemove[i]);
-      }
-    });
-  }
-  Planner.prototype.editLesson = function(lesson) {
-    var tmp = lesson;
-    var self = this;
-    if(lesson.riders.length === 0 && lesson.horses.length === 0) return;
-    var modalInstance = $modal.open({
-      templateUrl: 'client/components/lesson/modalEditLesson.html',
-      controller: 'ModalEditLessonCtrl',
-      resolve: {
-        lesson: function() {
-          return tmp;
-        },
-        planner: function () {
-          return self;
-        }
-      }
-    });
-
-    modalInstance.result.then(function(objectsToRemove) {
-      function remove(attr) {
-        for(var i = 0; i < objectsToRemove[attr].length; i++) {
-          var object = self[attr][objectsToRemove[attr][i]];
-          self.removeObjectFromLesson(attr, object, tmp);
-        }
-      }
-      remove('riders');
-      remove('horses');
-    });
-  }
-  
   Planner.prototype.toggleLesson = function(lesson, value) {
     lesson.actived = value == undefined ? !lesson.actived : value;
     if(!lesson.actived) {
@@ -444,7 +392,7 @@ angular.module('PlannerApp')
     $modalInstance.dismiss('cancel');
   };
 }])
-.controller('LessonsTemplatesCtrl', ['$scope', '$meteor', 'plannerCreator', function ($scope, $meteor, plannerCreator) {
+.controller('LessonsTemplatesCtrl', ['$scope', '$meteor', '$modal', 'plannerCreator', function ($scope, $meteor, $modal, plannerCreator) {
   function newPlanner() {
     return plannerCreator($scope);
   }
@@ -461,6 +409,60 @@ angular.module('PlannerApp')
       object.lessons[i].isOver = false;
     }
   };
+  
+  $scope.editLessons = function(planner, attr, object) {
+    var self = planner;
+    var tmp = object;
+    var modalInstance = $modal.open({
+      templateUrl: attr == 'horses' ? 'client/components/lesson/modalHorseEditLessons.html' : 'client/components/lesson/modalRiderEditLessons.html',
+      controller: 'ModalEditLessonsCtrl',
+      size: 'sm',
+      resolve: {
+        object: function() {
+          return tmp;
+        },
+        planner: function () {
+          return self;
+        }
+      }
+    });
+
+    modalInstance.result.then(function(lessonsToRemove) {
+      for(var i = 0; i < lessonsToRemove.length; i++) {
+        self.removeObjectFromLesson(attr, object, lessonsToRemove[i]);
+      }
+    });
+  }
+  $scope.editLesson = function(planner, lesson) {
+    var self = planner;
+    var tmp = lesson;
+    if(lesson.riders.length === 0 && lesson.horses.length === 0) return;
+    var modalInstance = $modal.open({
+      templateUrl: 'client/components/lesson/modalEditLesson.html',
+      controller: 'ModalEditLessonCtrl',
+      resolve: {
+        lesson: function() {
+          return tmp;
+        },
+        planner: function () {
+          return self;
+        }
+      }
+    });
+
+    modalInstance.result.then(function(objectsToRemove) {
+      function remove(attr) {
+        for(var i = 0; i < objectsToRemove[attr].length; i++) {
+          var object = self[attr][objectsToRemove[attr][i]];
+          self.removeObjectFromLesson(attr, object, tmp);
+        }
+      }
+      remove('riders');
+      remove('horses');
+    });
+  }
+  
+  
   
   $scope.resetNew = function() {
     $scope.planner = newPlanner();
