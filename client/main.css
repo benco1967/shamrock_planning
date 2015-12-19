@@ -31,6 +31,10 @@
   -khtml-user-drag: element;
   -webkit-user-drag: element;
 }
+
+.over-ok {
+  background-color: #66ff66;
+}
 .lesson-column {
   padding-left: 2px;
   padding-right: 2px;
