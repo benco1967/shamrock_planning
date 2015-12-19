@@ -9,15 +9,15 @@
     <div class="form-inline">
       <div class="form-group">
         <label for="startHour">de</label>
-        <input type="time" class="form-control" id="startHour" ng-model="planner.startHour" ng-change="planner.setHours()">
+        <input type="time" class="form-control" id="startHour" ng-disabled="!planner.hoursEditable" ng-model="planner.startHour" ng-change="planner.setHours()">
       </div>
       <div class="form-group">
         <label for="endHour">à</label>
-        <input type="time" class="form-control" id="endHour" ng-model="planner.endHour" ng-change="planner.setHours()"/>
+        <input type="time" class="form-control" id="endHour" ng-disabled="!planner.hoursEditable" ng-model="planner.endHour" ng-change="planner.setHours()"/>
       </div>
       <div class="form-group">
         <label for="step">toutes les</label>
-        <input type="time" class="form-control" id="step" ng-model="planner.step" ng-change="planner.setHours()"/>
+        <input type="time" class="form-control" id="step" ng-disabled="!planner.hoursEditable" ng-model="planner.step" ng-change="planner.setHours()"/>
       </div>
     </div>
   </div>

@@ -79,6 +79,7 @@ angular.module('PlannerApp')
   
   function drop(planner, id, lesson, attr) {
     if(!id) return;
+    planner.hoursEditable = false;
     var timesAttrs = planner.times[lesson.index][attr];
     if(timesAttrs.indexOf(id) != - 1) return;
     // update attr in times
@@ -99,6 +100,7 @@ angular.module('PlannerApp')
     var riders = scope.$meteorCollection(Riders, false);
     var instructors = scope.$meteorCollection(Instructors, false);
     var horses = scope.$meteorCollection(Horses, false);
+    this.hoursEditable = true;
     this.scope = scope;
     this.name = "Nouveau planning";
     this.riders = {};
@@ -272,6 +274,7 @@ angular.module('PlannerApp')
   };
   
   Planner.prototype.toggleLesson = function(lesson, value) {
+    this.hoursEditable = false;
     lesson.actived = value == undefined ? !lesson.actived : value;
     if(!lesson.actived) {
       var hour = this.times[lesson.index];
