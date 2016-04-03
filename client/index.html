@@ -12,10 +12,10 @@
   <base href="/">
 </head>
 
-<body ng-app="PlannerApp">
+<body ng-app="PlannerApp" ng-strict-di="">
   <div ng-controller="MainCtrl">
   
-    <nav ng-show="!secured" class="navbar navbar-fixed-top navbar-inverse">
+    <nav ng-if="!secured" class="navbar navbar-fixed-top navbar-inverse">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -43,13 +43,16 @@
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown">Configuration <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="config/horses">Chevaux</a></li>
+                <li><a ui-sref="horsesList">Chevaux</a></li>
                 <li><a href="config/instructors">Moniteurs</a></li>
                 <li><a href="config/riders">Cavaliers</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="config/templates">Reprises</a></li>
               </ul>
             </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <login-buttons></login-buttons>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a ng-click="secureMode()"><i class="fa fa-unlock fa-lg"></i></a></li>
@@ -60,7 +63,7 @@
     <i ng-show="secured" ng-click="unsecureMode()" class="fa fa-lock fa-2x" style="position: absolute; right: 10px; top: 10px;"></i>
     <div class="spacer" ng-show="!secured"></div>
     <div class="container-fluid">
-      <div ui-view></div>
+      <div ui-view=""></div>
     </div>
   </div>
 </body>

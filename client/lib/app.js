@@ -1,4 +1,4 @@
-angular.module('PlannerApp',['angular-meteor', 'ui.router', 'ui.bootstrap'])
+angular.module('PlannerApp',['angular-meteor', 'ui.router', 'ui.bootstrap', 'accounts.ui'])
 .factory("MultiTransclude", function() {
   return {
     transclude: function(iElem, transcludeFn) {

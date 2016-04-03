@@ -5,10 +5,10 @@
       <editable-item
         on-edit="resetNew()"
         on-create="create()">
-        <div type="editor"><ng-include src="'client/components/lesson/lessonsTemplateEditor.html'"></ng-include></div>
+        <div type="editor"><ng-include src="'client/components/lesson/plannerEditor.html'"></ng-include></div>
       </editable-item>
     </li>
-    <li class="list-group-item" ng-repeat="template in templates">
+    <li class="list-group-item" ng-init="" ng-repeat="template in templates">
       <editable-item
         id="template._id"
         on-delete="remove()"

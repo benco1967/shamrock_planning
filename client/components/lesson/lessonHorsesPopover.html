@@ -1,0 +1,4 @@
+<ul ng-if="lesson.horses.length != 0" style="padding-left:15px;width:200px">
+  <li ng-repeat="horse in lesson.horses"><strong>{{horse | idToHorse: "name"}}</strong></li>
+</ul>
+<div ng-if="lesson.horses.length == 0" style="width:200px"><strong>Aucun cheval</strong></div>

@@ -1,0 +1,12 @@
+<button class="btn btn-default" ui-sref="adminDashboard"><i class="glyphicon glyphicon-arrow-left"></i></button>
+<h2>Groups</h2>
+<form>
+  <div class="form-group">
+    <label for="name">Nom</label>
+    <input type="text" class="form-control" required="Veuillez donner un nom au club" name="name" id="name" placeholder="Nom du club" ng-model="adminGroups.newGroup.name">
+  </div>
+  <button class="btn btn-primary" ng-click="adminGroups.addGroup()"><i class="glyphicon glyphicon-plus"></i></button>
+</form>
+<ul>
+  <li ng-repeat="group in adminGroups.groups">{{group._id}} {{group.name}}</li>
+</ul>

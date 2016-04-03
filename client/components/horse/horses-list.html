@@ -1,0 +1,20 @@
+  <h2 droppable-horses-name>Chevaux ({{horsesList.horses.length}})</h2>
+  <form>
+    <div class="form-group">
+    <label for="name">Nom</label>
+    <input type="text" class="form-control" name="name" id="name" placeholder="Nom du cheval" ng-model="horsesList.newHorse.name">
+  </div>
+    <div class="form-group">
+      <label for="img">Image</label><br/>
+      <img-input ng-model="horsesList.newHorse.image"></img-input>
+    </div>
+    <button class="btn btn-primary" ng-click="horsesList.addHorse()"><i class="glyphicon glyphicon-plus"></i></button>
+  </form>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="horse in horsesList.horses">
+      <img-horse image="{{horse.image}}" name="{{horse.name}}" size="{{horseImgSize}}"></img-horse>&nbsp;
+      <span>{{horse.name}}</span>
+      <button class="btn btn-primary" ui-sref="horsesDetails({ id: horse._id })"><i class="glyphicon glyphicon-pencil"></i></button>
+      <trash-btn on-delete="horsesList.removeHorse(horse)"></trash-btn>
+    </li>
+  </ul>

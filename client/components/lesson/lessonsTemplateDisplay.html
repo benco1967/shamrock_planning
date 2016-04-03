@@ -1,1 +1,21 @@
-<span>{{template.name}}</span>
+<div class="row">
+  <div class="col-md-6">
+    <span>{{template.name}}</span>
+    <i class="fa" ng-class="{'fa-chevron-down' : !isCollapsed, 'fa-chevron-right' : isCollapsed}" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed"></i>
+  </div>
+</div>
+<div class="row" collapse="isCollapsed">
+  <div class="col-md-2" ng-repeat="(key, lessons) in template.lessons">
+    <div class="lesson-header">
+      <img-person image="{{key | idToInstructor:'image'}}" 
+      gender="{{key | idToInstructor:'gender'}}" 
+      name="{{key | idToInstructor" 
+      size="32"></img-person>&nbsp;<strong>{{key | idToInstructor}}</strong>
+    </div> 
+    <div class="lesson-body" ng-repeat="lesson in lessons">
+      <span><i class="sh sh-hour"></i> {{lesson.hour | date : "HH:mm"}}</span> / 
+      <span><i class="sh sh-helmet" popover-title="Cavaliers" popover-placement="left" popover-template="'client/components/lesson/lessonRidersPopover.html'" popover-trigger="mouseenter"></i> {{lesson.riders.length}}</span> / 
+      <span><i class="sh sh-horse" popover-title="Chevaux" popover-placement="right" popover-template="'client/components/lesson/lessonHorsesPopover.html'" popover-trigger="mouseenter"></i> {{lesson.horses.length}}</span>
+    </div>
+  </div>
+</div>

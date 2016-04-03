@@ -1,40 +1,102 @@
 
 angular.module('PlannerApp')
-.controller('HorsesCtrl', ['$scope', '$meteor', function ($scope, $meteor) {
-  
-  function newHorse() {
-    return {
-      name: "",
-      image: null,
-      creationDate: new Date()
-    }
+.directive('horseDetails', ["$log", function($log) {
+  return {
+    restrict: 'E',
+    templateUrl: 'client/components/horse/horse-details.html',
+    controllerAs: 'horseDetails',
+    controller: ['$scope', '$stateParams', '$reactive', '$state', function ($scope, $stateParams, $reactive, $state) {
+      $reactive(this).attach($scope);
+      this.id = $stateParams.id;
+      this.subscribe('users');
+      this.subscribe('horses');
+
+      this.helpers({
+        horse: function() {
+          return Horses.findOne({ _id: $stateParams.id });
+        },
+        users: function() {
+          return Meteor.users.find();
+        }
+      });
+      this.addNote = function () {
+        if(this.horse.notes === undefined) {
+          this.horse.notes = [];
+        }
+        this.horse.notes.push({date: new Date(), text: ""});
+      }
+      this.removeNote = function (index) {
+        this.horse.notes.splice(index, 1);
+      }
+      this.addCare = function () {
+        if(this.horse.careHistory === undefined) {
+          this.horse.careHistory = [];
+        }
+        this.horse.careHistory.push({date: new Date(), type: ""});
+      }
+      this.removeCare = function (index) {
+        this.horse.careHistory.splice(index, 1);
+      }
+
+      this.save = function () {
+        Horses.update(
+          {_id: this.id},
+          {
+            $set: {
+              name: this.horse.name,
+              image: this.horse.image,
+              lastUpdate: new Date(),
+              tags: this.horse.tags,
+              category: this.horse.category,
+              birthYear: this.horse.birthYear,
+              notes: angular.copy(this.horse.notes),
+              careHistory: angular.copy(this.horse.careHistory)
+            }
+          },
+          function(error) {
+            if (error) {
+              console.log("Oops, unable to update the horse... " + error.message);
+            }
+            else {
+              console.log("Horse saved!");
+              $state.go("horsesList");
+            }
+          }
+        );
+      }
+    }]
   }
-  $scope.horse = null;
-  $scope.horses = $scope.$meteorCollection(Horses, false);
-  $scope.instructors = $scope.$meteorCollection(Instructors, false);
-  $scope.resetNew = function() {
-    $scope.horse = newHorse();
-  };  
-  $scope.create = function() {
-    $scope.horse.creationDate = new Date();
-    Horses.insert($scope.horse);
-  };  
-  $scope.remove = function() {
-    Horses.remove(this.horse._id);
-  };
-  $scope.edit = function() {
-    this.horseCopy = angular.copy(this.horse);
-  };
-  $scope.save = function() {
-    var set = {
-          name: this.horse.name,
-          image: this.horse.image
-        };
-    Horses.update(this.horse._id, {$set:set});
-  };
-  $scope.cancelSave = function() {
-    angular.copy(this.horseCopy, this.horse);
-  };
+}])
+.directive('horsesList', ["$log", function ($log) {
+  return {
+    restrict: 'E',
+    templateUrl: 'client/components/horse/horses-list.html',
+    controllerAs: 'horsesList',
+    controller: ['$scope', '$reactive', function ($scope, $reactive) {
+      $reactive(this).attach($scope);
+      this.subscribe('horses');
+      this.subscribe('users');
+
+      this.newHorse = {};
+
+      this.helpers({
+        horses: function() {
+          return Horses.find();
+        },
+        users: function() {
+          return Meteor.users.find();
+        }
+      });
+      this.addHorse = function() {
+        this.newHorse.creationDate = new Date();
+        Horses.insert(this.newHorse);
+        this.newHorse = {};
+      };
+      this.removeHorse = function(horse) {
+        Horses.remove(horse._id);
+      };
+    }]
+  }
 }])
 .directive('droppableHorsesName', ["mimeType", "$log", function(mimeType, $log) {
   function setOverClass(el, e, scope) {

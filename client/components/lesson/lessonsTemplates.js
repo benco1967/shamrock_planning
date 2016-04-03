@@ -48,14 +48,8 @@ angular.module('PlannerApp')
 * Planner creator
 * planner is the object that allows to create the planning
 */
-.factory('plannerCreator', ['$sce', '$modal', 'mimeType', function($sce, $modal, mimeType) {
+.factory('plannerCreator', ['$sce', '$log', 'mimeType', function($sce, $log, mimeType) {
   
-  var noLessonPopover = $sce.trustAsHtml("<strong>Aucune reprise</strong>");
-  var noRiderPopover = $sce.trustAsHtml("<strong>Aucun cavalier</strong>");
-  var noHorsePopover = $sce.trustAsHtml("<strong>Aucun cheval</strong>");
-  var noObjPopover = {
-    horses: noHorsePopover, riders: noRiderPopover
-  };
   function hourToMilli(hour) {
     var regex = /(\d{2}):(\d{2}):\d/g;
     var tmp = regex.exec(hour);
@@ -67,31 +61,7 @@ angular.module('PlannerApp')
     t.setHours(h); 
     return t; 
   }
-
-  function getPopover(result, noObjPopover) {
-    if(result) {
-      return $sce.trustAsHtml('<ul style="padding-left:15px;">' + result + '</ul>');
-    }
-    return noObjPopover;
-  }
-  function getPopoverLesson(planner, lessons) {
-    var result = "";
-    for(i in lessons) {
-      var lesson = lessons[i];
-      result += '<li><strong>' + planner.plannings[lesson.instructor].instructor.name + '</strong> ' + moment(planner.times[i].hour).format("HH:mm") + '</li>';
-    }
-    return getPopover(result, noLessonPopover);
-  }
-  
-  function getPopoverFor(collection, list, noObjPopover) {
-    var result = "";
-    for(var i = 0; i < list.length; i++) {
-      var obj = collection[list[i]];
-      result += '<li><strong>' + obj.name + '</strong></li>';
-    }
-    return getPopover(result, noObjPopover);
-  }
-  
+   
   function drop(planner, id, lesson, attr) {
     if(!id) return;
     planner.hoursEditable = false;
@@ -103,10 +73,8 @@ angular.module('PlannerApp')
     var obj = planner[attr][id];
     obj.nbLessons++;
     obj.lessons[lesson.index] = lesson;
-    obj.popover = getPopoverLesson(planner, obj.lessons);
     // update attr in lesson
     lesson[attr].push(id);
-    lesson[attr + "Popover"] = getPopoverFor(planner[attr], lesson[attr], noObjPopover[attr]);
     // refresh display
     planner.scope.$digest();
   };
@@ -123,7 +91,6 @@ angular.module('PlannerApp')
       var rider = angular.copy(riders[i]);
       rider.nbLessons = 0;
       rider.lessons = {};
-      rider.popover = noLessonPopover;
       this.riders[rider._id] = rider;
     }
     this.horses = {};
@@ -131,7 +98,6 @@ angular.module('PlannerApp')
       var horse = angular.copy(horses[i]);
       horse.nbLessons = 0;
       horse.lessons = {};
-      horse.popover = noLessonPopover;
       this.horses[horse._id] = horse;
     }
     
@@ -147,7 +113,44 @@ angular.module('PlannerApp')
     this.startHour = getDate(8);
     this.endHour = getDate(20);
     this.step = getDate(1);
-    this.setHours();
+  }
+  Planner.prototype.setContent = function(lessonsTemplate) {
+    // reset plannings
+    for(var id in this.plannings) {
+      var planningFor = this.plannings[id];
+      planningFor.lessons = [];
+      for(var t = 0; t < this.times.length; t++) {
+        if(true) {
+          planningFor.lessons.push({
+            actived: true,
+            index: t,
+            instructor: id,
+            horses: [],
+            riders:[]
+          });
+        }
+        else {
+          planningFor.lessons.push({
+            actived: true,
+            index: t,
+            instructor: id,
+            horses: [],
+            riders:[]
+          });
+        }
+      }
+    }
+    // reset montoir
+    for(var id in this.horses) {
+      var horse = this.horses[id];
+      horse.nbLessons = 0;
+      horse.lessons = {};
+    }
+    for(var id in this.riders) {
+      var rider = this.riders[id];
+      rider.nbLessons = 0;
+      rider.lessons = {};
+    }
   }
   Planner.prototype.setHours = function() {
     // Reset hours
@@ -167,9 +170,7 @@ angular.module('PlannerApp')
         this.times.push({
           hour: new Date(value),
           horses: [],
-          horsesPopover : noHorsePopover,
-          riders:[],
-          horsesPopover : noRiderPopover
+          riders:[]
         });
       }
     }
@@ -183,9 +184,7 @@ angular.module('PlannerApp')
           index: t,
           instructor: id,
           horses: [],
-          horsesPopover : noHorsePopover,
-          riders:[],
-          ridersPopover : noRiderPopover
+          riders:[]
         });
       }
     }
@@ -194,13 +193,11 @@ angular.module('PlannerApp')
       var horse = this.horses[id];
       horse.nbLessons = 0;
       horse.lessons = {};
-      horse.popover = noLessonPopover;
     }
     for(var id in this.riders) {
       var rider = this.riders[id];
       rider.nbLessons = 0;
       rider.lessons = {};
-      rider.popover = noLessonPopover;
     }
   };
   
@@ -257,35 +254,29 @@ angular.module('PlannerApp')
     // suppress the lesson in the obect
     object.nbLessons--;
     delete object.lessons[lesson.index];
-    object.popover = getPopoverLesson(this, object.lessons);
     // suppress the object in the lesson
     var objects = lesson[attr];
     var index = objects.indexOf(object._id);
     lesson[attr].splice(index, 1);
-    lesson[attr + "Popover"] = getPopoverFor(this[attr], lesson[attr], noObjPopover[attr]);
     // suppress the object in the times
     var time = this.times[lesson.index];
     var objects = time[attr];
     var index = objects.indexOf(object._id);
     time[attr].splice(index, 1);
-    time[attr + "Popover"] = getPopoverFor(this[attr], lesson[attr], noObjPopover[attr]);
   };
   Planner.prototype.removeFromObject = function(attr, lesson, object) {
     // suppress the lesson in the obect
     object.nbLessons--;
     delete object.lessons[lesson.index];
-    object.popover = getPopoverLesson(this, object.lessons);
     // suppress the object in the lesson
     var objects = lesson[attr];
     var index = objects.indexOf(object._id);
     lesson[attr].splice(index, 1);
-    lesson[attr + "Popover"] = getPopoverFor(this[attr], lesson[attr], noObjPopover[attr]);
     // suppress the object in the times
     var time = this.times[lesson.index];
     var objects = time[attr];
     var index = objects.indexOf(object._id);
     time[attr].splice(index, 1);
-    time[attr + "Popover"] = getPopoverFor(this[attr], lesson[attr], noObjPopover[attr]);
   };
   
   Planner.prototype.toggleLesson = function(lesson, value) {
@@ -299,7 +290,6 @@ angular.module('PlannerApp')
         if(horse) {
           horse.nbLessons--;
           delete horse.lessons[lesson.index];
-          horse.popover = getPopoverLesson(this, horse.lessons);
         }
         var index = hour.horses.indexOf(horseId);
         if(index != -1) hour.horses.splice(index, 1);
@@ -310,15 +300,12 @@ angular.module('PlannerApp')
         if(rider) {
           rider.nbLessons--;
           delete rider.lessons[lesson.index];
-          rider.popover = getPopoverLesson(this, rider.lessons);
         }
         var index = hour.riders.indexOf(riderId);
         if(index != -1) hour.riders.splice(index, 1);
       }
       lesson.riders = [];
-      lesson.ridersPopover = noRiderPopover;
       lesson.horses = [];
-      lesson.horsesPopover = noHorsePopover;
     }
   };
   Planner.prototype.toggleLessons = function(lessons) {
@@ -330,11 +317,43 @@ angular.module('PlannerApp')
       this.toggleLesson(lessons[i], value);
     }
   };
-  
-  var instances = {};
-  var currentId = 0;
-  function create(scope) {
-    return new Planner(scope);
+  Planner.prototype.getTemplate = function() {
+    result = {
+      name: this.name,
+      creationDate: new Date(),
+      lessons: {},
+      times:[]
+    };
+    for(var t = 0; t < this.times.length; t++) {
+      result.times.push({ hour: angular.copy(this.times[t]) });
+    } 
+    for(var id in this.plannings) {
+      result.lessons[id] = [];
+      var planningFor = this.plannings[id];
+      for(var t = 0; t < this.times.length; t++) {
+        var planning = planningFor.lessons[t];
+        if(planning.actived) {
+          result.lessons[id].push({
+            index: planning.index, 
+            horses: planning.horses,
+            riders: planning.riders
+          });
+        }
+      }
+    }
+
+    $log.info("nouveau template " + JSON.stringify(result));
+    return result;
+  }
+  var create = function create(scope) {
+    var planner = new Planner(scope);
+    planner.setHours();
+    return planner;
+  }
+  create.formTemplate = function(scope, lessonsTemplate) {
+    var planner = new Planner(scope);
+    planner.setContent(lessonsTemplate);
+    return planner;
   }
   return create;
 }])
@@ -361,7 +380,7 @@ angular.module('PlannerApp')
       name: instructor.name,
       image: instructor.image,
       gender: instructor.gender,
-      hour: moment(planner.times[i].hour).format("HH:mm"),
+      hour: planner.times[i].hour,
       lesson: lesson,
       selected: false
     });
@@ -381,7 +400,6 @@ angular.module('PlannerApp')
     $modalInstance.dismiss('cancel');
   };
 }])
-
 /***************************************************************************************
 *
 *    88     888888 .dP"Y8 .dP"Y8  dP"Yb  88b 88  .o. .dP"Y8      dP"Yb  88""Yb  88888 888888  dP""b8 888888 .dP"Y8     888888 8888b.  88 888888  dP"Yb  88""Yb 
@@ -396,7 +414,7 @@ angular.module('PlannerApp')
   $scope.name = instructor.name;
   $scope.image = instructor.image;
   $scope.gender = instructor.gender;
-  $scope.hour = moment(planner.times[lesson.index].hour).format("HH:mm");
+  $scope.hour = planner.times[lesson.index].hour;
   function setObjects(attr) {
     $scope[attr] = [];
     for(var i = 0; i < lesson[attr].length; i++) {
@@ -430,17 +448,56 @@ angular.module('PlannerApp')
     $modalInstance.dismiss('cancel');
   };
 }])
+/**************************************************************************************************
+ *
+ *    88     888888 .dP"Y8 .dP"Y8  dP"Yb  88b 88  .o. .dP"Y8     888888 8888b.  88 888888  dP"Yb  88""Yb      dP"Yb  888888     888888 888888 8b    d8 88""Yb 88        db    888888 888888 
+ *    88     88__   `Ybo." `Ybo." dP   Yb 88Yb88 ,dP' `Ybo."     88__    8I  Yb 88   88   dP   Yb 88__dP     dP   Yb 88__         88   88__   88b  d88 88__dP 88       dPYb     88   88__   
+ *    88  .o 88""   o.`Y8b o.`Y8b Yb   dP 88 Y88      o.`Y8b     88""    8I  dY 88   88   Yb   dP 88"Yb      Yb   dP 88""         88   88""   88YbdP88 88"""  88  .o  dP__Yb    88   88""   
+ *    88ood8 888888 8bodP' 8bodP'  YbodP  88  Y8      8bodP'     888888 8888Y"  88   88    YbodP  88  Yb      YbodP  88           88   888888 88 YY 88 88     88ood8 dP""""Yb   88   888888 
+ */
+.controller('ModalEditLessonContentCtrl', ['$scope', '$modalInstance', 'lesson', 'instructor', function ($scope, $modalInstance, lesson, instructor) {
+  $scope.name = instructor.name;
+  $scope.image = instructor.image;
+  $scope.gender = instructor.gender;
+  $scope.hour = lesson.hour;
+  var objects = {
+    riders: Riders,
+    horses: Horses
+  };
+  function setObjects(attr) {
+    $scope[attr] = [];
+    for(var i = 0; i < lesson[attr].length; i++) {
+      var object = objects[attr].findOne({_id: lesson[attr][i]});
+      $scope[attr].push({
+        name: object.name,
+        image: object.image,
+        gender: object.gender,
+        _id: object._id,
+        selected: false
+      });
+    }
+  }
+  setObjects('riders');
+  setObjects('horses');
+  
+  $scope.ok = function () {
+    $modalInstance.close();
+  };
 
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+}])
 /*************************************************************************************************************************
-
-888888 888888 8b    d8 88""Yb 88        db    888888 888888     88     888888 .dP"Y8 .dP"Y8  dP"Yb  88b 88      dP""b8  dP"Yb  88b 88 888888 88""Yb  dP"Yb  88     88     888888 88""Yb 
-  88   88__   88b  d88 88__dP 88       dPYb     88   88__       88     88__   `Ybo." `Ybo." dP   Yb 88Yb88     dP   `" dP   Yb 88Yb88   88   88__dP dP   Yb 88     88     88__   88__dP 
-  88   88""   88YbdP88 88"""  88  .o  dP__Yb    88   88""       88  .o 88""   o.`Y8b o.`Y8b Yb   dP 88 Y88     Yb      Yb   dP 88 Y88   88   88"Yb  Yb   dP 88  .o 88  .o 88""   88"Yb  
-  88   888888 88 YY 88 88     88ood8 dP""""Yb   88   888888     88ood8 888888 8bodP' 8bodP'  YbodP  88  Y8      YboodP  YbodP  88  Y8   88   88  Yb  YbodP  88ood8 88ood8 888888 88  Yb 
-
-* Controller of the template lesson
-*/
-.controller('LessonsTemplatesCtrl', ['$scope', '$meteor', '$modal', 'plannerCreator', function ($scope, $meteor, $modal, plannerCreator) {
+ *
+ *888888 888888 8b    d8 88""Yb 88        db    888888 888888     88     888888 .dP"Y8 .dP"Y8  dP"Yb  88b 88      dP""b8  dP"Yb  88b 88 888888 88""Yb  dP"Yb  88     88     888888 88""Yb 
+ *  88   88__   88b  d88 88__dP 88       dPYb     88   88__       88     88__   `Ybo." `Ybo." dP   Yb 88Yb88     dP   `" dP   Yb 88Yb88   88   88__dP dP   Yb 88     88     88__   88__dP 
+ *  88   88""   88YbdP88 88"""  88  .o  dP__Yb    88   88""       88  .o 88""   o.`Y8b o.`Y8b Yb   dP 88 Y88     Yb      Yb   dP 88 Y88   88   88"Yb  Yb   dP 88  .o 88  .o 88""   88"Yb  
+ *  88   888888 88 YY 88 88     88ood8 dP""""Yb   88   888888     88ood8 888888 8bodP' 8bodP'  YbodP  88  Y8      YboodP  YbodP  88  Y8   88   88  Yb  YbodP  88ood8 88ood8 888888 88  Yb 
+ *
+ * Controller of the template lesson
+ */
+.controller('LessonsTemplatesCtrl', ['$scope', '$modal', 'plannerCreator', function ($scope, $modal, plannerCreator) {
   function newPlanner() {
     return plannerCreator($scope);
   }
@@ -510,19 +567,38 @@ angular.module('PlannerApp')
     });
   }
   
-  
+  $scope.editLessonContent = function(instructor_id, lesson) {
+    var instructor = Instructors.findOne({ _id: instructor_id });
+    var tmp = lesson;
+    var modalInstance = $modal.open({
+      templateUrl: 'client/components/lesson/modalEditLessonContent.html',
+      controller: 'ModalEditLessonContentCtrl',
+      resolve: {
+        lesson: function() {
+          return tmp;
+        },
+        instructor: function () {
+          return instructor;
+        }
+      }
+    });
+
+    modalInstance.result.then(function() {
+    });
+  }
   
   $scope.resetNew = function() {
     $scope.planner = newPlanner();
   };  
   $scope.create = function() {
-    //$scope.template.creationDate = new Date();
-    //LessonsTemplates.insert($scope.template);
+    var template = $scope.planner.getTemplate();
+    LessonsTemplates.insert(template);
   }; 
   $scope.duplicate = function() {
     var tmp = angular.copy(this.template);
     delete tmp._id;
     tmp.creationDate = new Date();
+    tmp.name = tmp.name + " copie";
     return LessonsTemplates.insert(tmp);
   }; 
   $scope.remove = function() {
@@ -530,6 +606,7 @@ angular.module('PlannerApp')
   };
   $scope.edit = function() {
     this.templateCopy = angular.copy(this.template);
+    $scope.planner = plannerCreator.formTemplate($scope, this.template);
   };
   $scope.save = function() {
     var set = {

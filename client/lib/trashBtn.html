@@ -1,0 +1,5 @@
+<button ng-if="!isConfirmShown()" ng-click="showConfirm()" class="btn btn-primary"><i class="glyphicon glyphicon-trash"></i></button>
+<div ng-if="isConfirmShown()" class="btn-group" role="group">
+  <button ng-click="hideConfirm()" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+  <button ng-click="remove()" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+</div>

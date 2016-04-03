@@ -1,0 +1,71 @@
+<form>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="name">Nom</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Nom du cheval" ng-model="horseDetails.horse.name">
+      </div>
+      <div class="form-group">
+        <label for="img">Image</label><br/>
+        <img-input ng-model="horseDetails.horse.image"></img-input>
+      </div>
+      <div class="form-group">
+        <label for="tags">Etiquettes</label>
+        <input type="text" class="form-control" name="tags" id="tags" placeholder="Etiquettes séparées par des virgules" ng-model="horseDetails.horse.tags">
+      </div>
+      <div class="form-group">
+        <label for="category">Catégorie</label>
+        <select class="form-control" name="category" id="category" ng-model="horseDetails.horse.category">
+          <option value="">-</option>
+          <option value="A">A (&lt; 1.07m)</option>
+          <option value="B">B (1.08m &lt; 1.30m)</option>
+          <option value="C">C (1.31m &lt; 1.40m)</option>
+          <option value="D">D (1.41m &lt; 1.48m)</option>
+          <option value="E">Cheval (&gt; 1.48m)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="birthYear">Année de naissance</label>
+        <input type="number" min="1985" class="form-control" name="birthYear" id="birthYear" ng-model="horseDetails.horse.birthYear">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <ul class="list-group">
+        <li class="list-group-item disabled form-inline">
+          <label>Notes</label>
+          <button class="btn btn-primary" ng-click="horseDetails.addNote()"><i class="glyphicon glyphicon-plus"></i></button>
+        </li>
+        <li class="list-group-item form-inline" ng-repeat="note in horseDetails.horse.notes">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            <input type="date" id="name" class="form-control" placeholder="date" ng-model="note.date"/>
+          </div>
+          <div class="form-group">
+            <textarea rows="1" id="text" class="form-control" placeholder="texte"  ng-model="note.text"></textarea>
+          </div>
+          <trash-btn on-delete="horseDetails.removeNote($index)"></trash-btn>
+        </li>
+      </ul>
+      <div class="form-group">
+        <ul class="list-group">
+          <li class="list-group-item disabled form-inline">
+            <label>Historiques des soins</label>
+            <button class="btn btn-primary" ng-click="horseDetails.addCare()"><i class="glyphicon glyphicon-plus"></i></button>
+          </li>
+          <li class="list-group-item form-inline" ng-repeat="care in horseDetails.horse.careHistory">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+              <input type="date" class="form-control" placeholder="date" name="date" id="date" ng-model="care.date"/>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="type" name="type" id="type" ng-model="care.type"/>
+            </div>
+            <trash-btn on-delete="horseDetails.removeCare($index)"></trash-btn>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</form>
+<button class="btn btn-default" ui-sref="horsesList"><i class="glyphicon glyphicon-arrow-left"></i></button>
+<button class="btn btn-success" ng-click="horseDetails.save()"><i class="glyphicon glyphicon-ok"></i></button>

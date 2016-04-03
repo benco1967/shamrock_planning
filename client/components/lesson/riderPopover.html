@@ -1,1 +1,4 @@
-<div ng-bind-html="rider.popover"></div>
+<ul ng-show="rider.lessons | isNotEmpty" style="padding-left:15px;width:150px">
+  <li ng-repeat="lesson in rider.lessons"><strong> {{lesson.instructor | idToInstructor}}</strong> {{planner.times[$index].hour | date:"HH:mm"}}</li>
+</ul>
+<div ng-show="rider.lessons | isEmpty" style="width:150px"><strong>Aucune reprise</strong></div>
