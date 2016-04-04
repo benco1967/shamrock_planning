@@ -1,16 +1,30 @@
 <button class="btn btn-default" ui-sref="adminUsers"><i class="glyphicon glyphicon-arrow-left"></i></button>
 <h2>Utilisateur {{adminUserDetails.user.profile.name}}</h2>
-<ul ng-if="!adminUserDetails.isAdmin()">
-  <li ng-repeat="group in adminUserDetails.user.groups">
-    {{adminUserDetails.getGroupName(group)}}
+<ul class="list-group">
+  <li class="list-group-item" ng-if="adminUserDetails.isAdmin()">
+    Administrateur
   </li>
-  <li>
-    <form>
-      <select ng-model="adminUserDetails.newGroup">
-        <option value="">--</option>
-        <option ng-repeat="group in adminUserDetails.groups" value="{{group._id}}">{{group.name}}</option>
-      </select>
-      <button class="btn btn-success btn-xs" ng-click="adminUserDetails.addGroup()"><i class="glyphicon glyphicon-plus"></i></button>
+  <li class="list-group-item" ng-if="!adminUserDetails.isAdmin()" ng-repeat="(groupId, roles) in adminUserDetails.user.roles">
+    {{adminUserDetails.getGroupName(groupId)}}
+    <span ng-repeat="role in roles">&nbsp;
+      <button class="btn btn-default btn-xs" ng-click="adminUserDetails.removeRole(groupId, role)">{{role}}
+        <i class="glyphicon glyphicon-remove"></i>
+      </button>
+    </span>
+  </li>
+  <li class="list-group-item" ng-if="!adminUserDetails.isAdmin()">
+    <form class="form-inline">
+      <div class="form-group">
+        <select class="form-control" ng-model="adminUserDetails.newGroup.name">
+          <option ng-repeat="group in adminUserDetails.groups" value="{{group._id}}">{{group.name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <select class="form-control" ng-model="adminUserDetails.newGroup.role">
+          <option ng-repeat="role in adminUserDetails.roles" value="{{role}}">{{role}}</option>
+        </select>
+      </div>
+      <button class="btn btn-success" ng-click="adminUserDetails.addRole()"><i class="glyphicon glyphicon-plus"></i></button>
     </form>
   </li>
 </ul>

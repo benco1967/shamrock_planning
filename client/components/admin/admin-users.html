@@ -1,7 +1,8 @@
 <button class="btn btn-default" ui-sref="adminDashboard"><i class="glyphicon glyphicon-arrow-left"></i></button>
 <h2>Users</h2>
-<ul>
-  <li ng-repeat="user in adminUsers.users">
+<ul class="list-group">
+  <li class="list-group-item" ng-repeat="user in adminUsers.users">
     {{user._id}} {{user.profile.surname}} {{user.profile.name}}
-    <button class="btn btn-success btn-xs" ui-sref="adminUserDetails({ id: user._id })"><i class="glyphicon glyphicon-pencil"></i></button>  </li>
+    <button class="btn btn-success" ui-sref="adminUserDetails({ id: user._id })"><i class="glyphicon glyphicon-pencil"></i></button>
+  </li>
 </ul>

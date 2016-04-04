@@ -21,7 +21,10 @@ angular.module('PlannerApp')
       this.subscribe('allUserData');
       this.subscribe('groups');
       this.id = $stateParams.id;
-      this.newGroup = "";
+      this.newGroup = {
+        name: "",
+        role: ""
+      };
 
       this.helpers({
         user: function() {
@@ -29,34 +32,39 @@ angular.module('PlannerApp')
         },
         groups: function() {
           return Groups.find();
+        },
+        roles: function() {
+          return [ "member", "manager" ];
         }
       });
 
       this.isAdmin = function () {
         return Roles.userIsInRole(this.id, 'admin');
       }
-      this.getGroupName = function(id) {
-        return Groups.findOne(id).name;
+      this.getGroupName = function(groupId) {
+        return Groups.findOne(groupId).name;
       }
-      this.addGroup = function () {
-        console.log(">>>>>> add group " + this.newGroup);
-        Meteor.users.update(
-          {_id: this.id},
-          {
-            $push: {
-              groups: this.newGroup
-            }
-          },
-          function(error) {
-            if (error) {
-              console.log("Oops, unable to update the user... " + error.message);
-            }
-            else {
-              console.log("user saved!");
-              this.newGroup = "";
-            }
-          }
-        );
+      function updateGroupForUser(funcName, user, group, role) {
+        Meteor.apply(funcName,
+            [user, group, role],
+            function(error) {
+              if (error) {
+                console.log("Oops, unable to update the user... " + error.message);
+              }
+              else {
+                console.log("user saved!");
+                this.newGroup = {
+                  name: "",
+                  role: ""
+                };
+              }
+            });
+      }
+      this.addRole = function () {
+        updateGroupForUser("setRoleForUser", this.id, this.newGroup.name, this.newGroup.role);
+      }
+      this.removeRole = function (group, role) {
+        updateGroupForUser("removeRoleForUser", this.id, group, role);
       }
     }]
   }
