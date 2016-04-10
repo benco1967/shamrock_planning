@@ -9,11 +9,17 @@ angular.module('PlannerApp')
       $reactive(this).attach($scope);
       this.id = $stateParams.id;
       this.subscribe('users');
-      this.subscribe('horses');
+      this.subscribe('horses', function() {
+        return [ Session.get("groupId") ];
+      });
 
       this.helpers({
         horse: function() {
-          return Horses.findOne({ _id: $stateParams.id });
+          var tmp = Horses.findOne({ _id: $stateParams.id });
+          if(!tmp) {
+            $state.go("horsesList");
+          }
+          return tmp;
         },
         users: function() {
           return Meteor.users.find();
@@ -74,7 +80,9 @@ angular.module('PlannerApp')
     controllerAs: 'horsesList',
     controller: ['$scope', '$reactive', function ($scope, $reactive) {
       $reactive(this).attach($scope);
-      this.subscribe('horses');
+      this.subscribe('horses', function() {
+        return [ Session.get("groupId") ];
+      });
       this.subscribe('users');
 
       this.newHorse = {};
@@ -89,6 +97,7 @@ angular.module('PlannerApp')
       });
       this.addHorse = function() {
         this.newHorse.creationDate = new Date();
+        this.newHorse.owner = Session.get("groupId");
         Horses.insert(this.newHorse);
         this.newHorse = {};
       };
