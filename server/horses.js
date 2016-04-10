@@ -1,12 +1,14 @@
-Meteor.publish("horses", function () {
+Meteor.publish("horses", function (groupId) {
+  check(groupId, String);
+  // admin is ok
   if (Roles.userIsInRole(this.userId, "admin")) {
-    return Horses.find({});
+    return Horses.find({owner: groupId});
   }
-  var groups = Roles.getGroupsForUser(this.userId);
-  if (groups.length !== 0) {
-    return Horses.find({owner: {$in: groups}});
+  // user needs to be in the group
+  var roles = Roles.getRolesForUser(this.userId, groupId);
+  if(roles.length !== 0) {
+    return Horses.find({owner: groupId});
   }
-  else {
-    this.ready();
-  }
+  // No accesss
+  this.ready();
 });
