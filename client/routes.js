@@ -13,9 +13,6 @@ angular.module('PlannerApp')
   }
   function checkSuperAdmin($q) {
     if(!Roles.userIsInRole(Meteor.userId(), "admin")) {
-      console.log(">>>>>>>>>>>> reject " + Meteor.userId());
-      console.log(">>>>>>>>>>>> reject " + Roles.userIsInRole(Meteor.userId(), "admin"));
-      console.log(">>>>>>>>>>>> reject " + Roles.userIsInRole(Meteor.user(), "admin"));
       return $q.reject('AUTH_REQUIRED');
     }
     else {
